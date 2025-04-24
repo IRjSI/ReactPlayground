@@ -78,3 +78,33 @@ An **iframe** is a small browser window embedded within your current webpage. It
 #### <u>property</u>
 **srcDoc ->** Instead of a URL, lets you inject raw HTML directly
 
+
+# Logic
+
+**After user submits the solution, how do we validate it?**
+
+We get the document from iframe as:
+``` jsx
+const iframe = document.querySelector("iframe") as HTMLIFrameElement;
+const iframeDoc = iframe?.contentDocument;
+```
+
+Then we perform the logic
+
+But we have to make some changes:
+``` jsx
+<iframe
+    sandbox="allow-scripts allow-same-origin"
+```
+
+add allow-same-origin
+
+Also if we try to access iframe.contentDocument before it's ready, we might get *null*
+so to avoid this:
+``` jsx
+const iframeDoc = iframe?.contentDocument;
+
+if (!doc) return console.log("Iframe not ready");
+...
+```
+
