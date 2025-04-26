@@ -1,7 +1,7 @@
 import { simulateClickValidation } from "../utils/helper";
 
 const solution = async (iframeDoc: Document) => {
-  return await simulateClickValidation(iframeDoc, "button", "initial", "click");
+  return await simulateClickValidation(iframeDoc, "button", "click");
 };
 
 const Two = () => {

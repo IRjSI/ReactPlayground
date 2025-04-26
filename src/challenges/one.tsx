@@ -1,7 +1,6 @@
 const solution = (iframeDoc: Document) => {
   const button = iframeDoc.querySelector("button");
-  const text = button?.innerText
-  return !!button && text === 'click';
+  return !!button;
 };
 
 const One = () => {

@@ -1,10 +1,15 @@
 import { useState } from "react";
+import Header from "../components/Header";
 
 const LandingPage = () => {
   const [hovered, setHovered] = useState(false);
 
   return (
-    <div className="h-screen relative overflow-hidden bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white">
+    <div className="h-screen relative overflow-hidden bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white p-4">
+
+    <div className="px-24">
+      <Header />
+    </div>
       
       <div className="absolute inset-0 bg-[radial-gradient(circle,#0ff_1px,transparent_1px)] [background-size:40px_40px] opacity-20 animate-moveDots" />
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.1)_0%,transparent_60%)]" />
@@ -20,7 +25,7 @@ const LandingPage = () => {
           <img 
             src="https://upload.wikimedia.org/wikipedia/commons/1/19/LeetCode_logo_black.png" 
             alt="LeetCode Logo"
-            className={`w-8 h-8 transition-all duration-500 ${hovered ? "opacity-100 translate-x-2" : "opacity-0 translate-x-0"} -rotate-45`}
+            className={`w-8 h-8 transition-all duration-500 ${hovered ? "opacity-50 translate-x-2 animate-bounce" : "opacity-0 translate-x-0"} -rotate-45`}
           />
           <span>LeetCode</span>
         </div>
@@ -32,7 +37,7 @@ const LandingPage = () => {
           <img 
             src="https://cdn4.iconfinder.com/data/icons/logos-3/600/React.js_logo-512.png" 
             alt="React Logo"
-            className={`w-8 h-8 transition-all duration-500 ${hovered ? "opacity-100 -translate-x-2" : "opacity-0 translate-x-0"} rotate-45`}
+            className={`w-8 h-8 transition-all duration-500 ${hovered ? "opacity-50 -translate-x-2 animate-bounce" : "opacity-0 translate-x-0"} rotate-45`}
           />
         </div>
       </div>
@@ -41,7 +46,7 @@ const LandingPage = () => {
           Solve challenges. Level up your React skills.
         </div>
 
-        <button className="mt-6 px-6 py-3 bg-cyan-500 hover:bg-cyan-400 text-white rounded-full text-lg font-medium transition-transform transform hover:scale-105 duration-300 shadow-lg">
+        <button className="mt-6 px-6 py-3 bg-gradient-to-r from-cyan-500 to-cyan-600 hover:from-cyan-400 hover:to-cyan-500 text-white rounded-full text-lg font-semibold transition-all transform hover:scale-105 duration-300 shadow-lg hover:shadow-cyan-500/30 focus:outline-none">
           Start Solving →
         </button>
       </div>

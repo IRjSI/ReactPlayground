@@ -67,7 +67,7 @@ const Home = () => {
   const html = compileCode(code);
 
   return (
-    <>
+    <div className='h-screen'>
       <div className='flex justify-center'>
         {comps[ques]}
         <button onClick={() => (setQues(ques < (comps.length-1) ? ques+1 : 0))} className="ml-4 px-2 rounded-sm border border-blue-500 bg-blue-500/30">next</button>
@@ -104,7 +104,7 @@ const Home = () => {
         </div>
 
       </div>
-    </>
+    </div>
   );
 };
 
