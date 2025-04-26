@@ -4,11 +4,11 @@ import Editor from "@monaco-editor/react";
 import { One, solution as validateOne } from "../challenges/one";
 import { Two, solution as validateTwo } from '../challenges/two';
 import { Three, solution as validateThree } from '../challenges/three';
-import Four from '../challenges/four';
-import Five from '../challenges/five';
+import { Four, solution as validateFour } from '../challenges/four';
+import { Five, solution as validateFive } from '../challenges/five';
 
 const Home = () => {
-  const validators = [validateOne, validateTwo, validateThree];
+  const validators = [validateOne, validateTwo, validateThree, validateFour, validateFive];
   const [code, setCode] = useState(`function App() {\n  return <h1>Hello</h1>;\n}`);
   const [output, setOutput] = useState('');
   const [ques, setQues] = useState(0);
@@ -70,8 +70,8 @@ const Home = () => {
     <>
       <div className='flex justify-center'>
         {comps[ques]}
-        <button onClick={() => (setQues(ques < 4 ? ques+1 : 0))} className="ml-4 px-2 rounded-sm border border-blue-500 bg-blue-500/30">next</button>
-      </div>
+        <button onClick={() => (setQues(ques < (comps.length-1) ? ques+1 : 0))} className="ml-4 px-2 rounded-sm border border-blue-500 bg-blue-500/30">next</button>
+      </div>           
 
       <div className="grid grid-cols-2 gap-4 p-4">
                         

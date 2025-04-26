@@ -4,10 +4,8 @@ const solution = async (iframeDoc: Document): Promise<boolean> => {
   
     if (!input || !output) return false;
   
-    // Check if the user code contains the useState hook and correctly handles input
-  
     // Simulate typing by user (can be any random value for the test)
-    const testValue = output.innerText;
+    const testValue = "test";
     input.value = testValue;
     input.dispatchEvent(new Event("input", { bubbles: true }));
   
@@ -16,12 +14,13 @@ const solution = async (iframeDoc: Document): Promise<boolean> => {
   
     // Check if the output <p> tag reflects the input value correctly
     return output.textContent?.trim() === testValue;
-};  
+  };
+  
 
 const Three = () => {
     return (
         <div className="flex justify-center items-center">
-            <h1 className="text-3xl font-semibold">Challenge 3: Have an input box and show the live input below it</h1>
+            <h1 className="text-3xl font-semibold">Challenge 3: Have an input box and show the live input below it(write 'challenge')</h1>
         </div>
     )
 }

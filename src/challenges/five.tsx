@@ -1,3 +1,6 @@
+const solution = () => {
+    
+}
 
 const Five = () => {
     return (
@@ -7,6 +10,4 @@ const Five = () => {
     )
 }
 
-export default Five
-
-
+export { Five, solution }
