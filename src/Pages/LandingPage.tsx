@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Header from "../components/Header";
+import { Link } from "react-router-dom";
 
 const LandingPage = () => {
   const [hovered, setHovered] = useState(false);
@@ -46,28 +47,28 @@ const LandingPage = () => {
           Solve challenges. Level up your React skills.
         </div>
 
-        <button className="mt-6 px-6 py-3 bg-gradient-to-r from-cyan-500 to-cyan-600 hover:from-cyan-400 hover:to-cyan-500 text-white rounded-full text-lg font-semibold transition-all transform hover:scale-105 duration-300 shadow-lg hover:shadow-cyan-500/30 focus:outline-none">
+        <Link to='/home' className="mt-6 px-6 py-3 bg-gradient-to-r from-cyan-500 to-cyan-600 hover:from-cyan-400 hover:to-cyan-500 text-white rounded-full text-lg font-semibold transition-all transform hover:scale-105 duration-300 shadow-lg hover:shadow-cyan-500/30 focus:outline-none">
           Start Solving →
-        </button>
+        </Link>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8 px-8 pb-16 relative z-10">
         
-        <div className="border border-cyan-400 bg-gray-800/60 backdrop-blur-lg rounded-2xl shadow-lg p-6 hover:scale-105 transition-transform duration-300 hover:shadow-cyan-500/20">
+        <div className="border border-cyan-400 bg-gradient-to-r from-gray-800/60 via-gray-800/10 to-gray-800/60 backdrop-blur-lg rounded-2xl shadow-lg p-6 hover:scale-105 transition-transform duration-300 hover:shadow-cyan-500/20 cursor-pointer">
           <h2 className="text-2xl font-bold mb-2 text-cyan-400">Learn the Basics</h2>
           <p className="text-gray-300">
             Master JSX, components, props, and hooks through hands-on challenges.
           </p>
         </div>
 
-        <div className="border border-cyan-400 bg-gray-800/60 backdrop-blur-lg rounded-2xl shadow-lg p-6 hover:scale-105 transition-transform duration-300 hover:shadow-cyan-500/20">
+        <div className="border border-cyan-400 bg-gradient-to-r from-gray-800/60 via-gray-800/10 to-gray-800/60 backdrop-blur-lg rounded-2xl shadow-lg p-6 hover:scale-105 transition-transform duration-300 hover:shadow-cyan-500/20 cursor-pointer">
           <h2 className="text-2xl font-bold mb-2 text-cyan-400">Build Real Projects</h2>
           <p className="text-gray-300">
             Apply your knowledge by building mini-projects after each stage.
           </p>
         </div>
 
-        <div className="border border-cyan-400 bg-gray-800/60 backdrop-blur-lg rounded-2xl shadow-lg p-6 hover:scale-105 transition-transform duration-300 hover:shadow-cyan-500/20">
+        <div className="border border-cyan-400 bg-gradient-to-r from-gray-800/60 via-gray-800/10 to-gray-800/60 backdrop-blur-lg rounded-2xl shadow-lg p-6 hover:scale-105 transition-transform duration-300 hover:shadow-cyan-500/20 cursor-pointer">
           <h2 className="text-2xl font-bold mb-2 text-cyan-400">Master Advanced Concepts</h2>
           <p className="text-gray-300">
             Dive into context, performance optimization, custom hooks, and more.

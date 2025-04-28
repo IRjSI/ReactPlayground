@@ -12,7 +12,7 @@ const Home = () => {
   const [code, setCode] = useState(`function App() {\n  return <h1>Hello</h1>;\n}`);
   const [output, setOutput] = useState('');
   const [ques, setQues] = useState(0);
-  const comps = [<One />, <Two />, <Three />, <Four />, <Five />];
+  const questions = [<One />, <Two />, <Three />, <Four />, <Five />];
 
   const compileCode = (inputCode: string) => {
     try {
@@ -69,8 +69,8 @@ const Home = () => {
   return (
     <div className='h-screen'>
       <div className='flex justify-center'>
-        {comps[ques]}
-        <button onClick={() => (setQues(ques < (comps.length-1) ? ques+1 : 0))} className="ml-4 px-2 rounded-sm border border-blue-500 bg-blue-500/30">next</button>
+        {questions[ques]}
+        <button onClick={() => (setQues(ques < (questions.length-1) ? ques+1 : 0))} className="ml-4 px-2 rounded-sm border border-blue-500 bg-blue-500/30">next</button>
       </div>           
 
       <div className="grid grid-cols-2 gap-4 p-4">

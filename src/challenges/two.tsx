@@ -13,4 +13,4 @@ const Two = () => {
     )
   }
   
-export { Two, solution }  
+export { Two, solution }

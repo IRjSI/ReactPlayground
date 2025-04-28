@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom"
+
 function Header() {
     return (
       <header className="sticky top-0 z-50">
@@ -6,19 +8,19 @@ function Header() {
             <ul className="flex items-center justify-between">
               <div className="flex gap-6 items-center justify-center ml-4">
                 <li>
-                  <a href="#" className="text-cyan-100 hover:text-white px-3 py-2 rounded-full text-sm font-medium transition-colors hover:bg-cyan-500/20">
+                  <Link to="/" className="text-cyan-100 hover:text-white px-3 py-2 rounded-full text-sm font-medium transition-colors hover:bg-cyan-500/20">
                     Home
-                  </a>
+                  </Link>
                 </li> 
                 <li>
-                  <a href="#" className="text-cyan-100 hover:text-white px-3 py-2 rounded-full text-sm font-medium transition-colors hover:bg-cyan-500/20">
+                  <Link to="/about" className="text-cyan-100 hover:text-white px-3 py-2 rounded-full text-sm font-medium transition-colors hover:bg-cyan-500/20">
                     About
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a href="#" className="text-cyan-100 hover:text-white px-3 py-2 rounded-full text-sm font-medium transition-colors hover:bg-cyan-500/20">
+                  <Link to="/contact" className="text-cyan-100 hover:text-white px-3 py-2 rounded-full text-sm font-medium transition-colors hover:bg-cyan-500/20">
                     Contact
-                  </a>
+                  </Link>
                 </li>
               </div>
               <div>
