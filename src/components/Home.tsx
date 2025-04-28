@@ -68,7 +68,7 @@ const Home = () => {
     const iframeDoc = iframe.contentDocument;
     if (!iframeDoc) return setOutput("❌ Iframe not loaded");
   
-    const isValid = await validators[ques](iframeDoc);
+    const isValid = await validators[ques](iframeDoc, html);
     setOutput(isValid ? "✅ Correct solution" : "❌ Incorrect solution");
   };
 
