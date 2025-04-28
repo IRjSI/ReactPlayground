@@ -1,7 +1,14 @@
-import { simulateClickValidation } from "../utils/helper";
-
 const solution = async (iframeDoc: Document) => {
-  return await simulateClickValidation(iframeDoc, "button", "click");
+
+  const element = iframeDoc.querySelector("button");
+  if (!element) return false
+
+  // Fire click event
+  element.dispatchEvent(new Event("click", { bubbles: true }));
+
+  const afterText = element.textContent?.toLowerCase().trim();
+
+  return afterText === "click";
 };
 
 const Two = () => {
