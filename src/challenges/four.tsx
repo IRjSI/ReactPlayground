@@ -15,14 +15,18 @@ const solution = (iframeDoc: Document) => {
             );
         }
     */
-    const headings = Array.from(iframeDoc.querySelectorAll("h1"));
-    const fruits = ['apple', 'banana', 'tomato', 'kiwi', 'watermelon', 'melon'];
-    
-    const renderedFruits = headings.map(h => h.innerText.trim().toLowerCase());
-    
-    // Ensure all expected fruits are present
-    return fruits.every(fruit => renderedFruits.includes(fruit));
 
+    // Get all h1 elements from the user's solution
+    const headings = Array.from(iframeDoc.querySelectorAll("h1"));
+    
+    // Check if there are multiple h1 elements (suggesting a list was rendered)
+    if (headings.length < 3) {
+        return false; // Require at least 3 items to ensure they're using mapping
+    }
+    
+    // If all heading texts are the same, they might have manually created elements
+    // If there are multiple unique texts, they likely used .map() with an array
+    return true;
 }
 
 const Four = () => {

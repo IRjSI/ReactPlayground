@@ -9,7 +9,7 @@ const solution = async (iframeDoc: Document): Promise<boolean> => {
     input.value = testValue;
     input.dispatchEvent(new Event("input", { bubbles: true }));
   
-    // Allow React to update the DOM
+    // Allow React to update the DOM // important
     await new Promise(res => setTimeout(res, 50));
   
     // Check if the output <p> tag reflects the input value correctly
@@ -20,7 +20,7 @@ const solution = async (iframeDoc: Document): Promise<boolean> => {
 const Three = () => {
     return (
         <div className="flex justify-center items-center">
-            <h1 className="text-3xl font-semibold">Challenge 3: Have an input box and show the live input below it(write 'challenge')</h1>
+            <h1 className="text-3xl font-semibold">Challenge 3: Have an input box and show the live input below it</h1>
         </div>
     )
 }
