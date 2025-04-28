@@ -57,7 +57,6 @@ const Home = () => {
 
   return (
     <div className="h-screen flex flex-col">
-      {/* Question Section */}
       <div className="flex justify-between items-center p-4 bg-gray-900 text-white shadow-md">
         <div className="text-xl font-semibold">
           {questions[ques]}
