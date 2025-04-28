@@ -53,18 +53,24 @@ const Home = () => {
       `;
     }
   };
+  
+  const html = compileCode(code);
 
   const compareSolution = async () => {
     const iframe = document.querySelector("iframe") as HTMLIFrameElement;
-    const iframeDoc = iframe?.contentDocument;
-  
+    
+    // Reload the iframe content
+    iframe.srcdoc = html;
+    await new Promise(resolve => {
+      iframe.onload = resolve;
+    });
+    
+    const iframeDoc = iframe.contentDocument;
     if (!iframeDoc) return setOutput("❌ Iframe not loaded");
   
     const isValid = await validators[ques](iframeDoc);
     setOutput(isValid ? "✅ Correct solution" : "❌ Incorrect solution");
   };
-
-  const html = compileCode(code);
 
   return (
     <div className='h-screen'>
