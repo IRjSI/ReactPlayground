@@ -16,19 +16,7 @@ const Home = () => {
 
   const compileCode = (inputCode: string) => {
     try {
-      // convert jsx to regular js
-      // presets: ['react'] => tells babel to support react JSX syntax
-      // .code => gives the actual code(JavaScript string output)
-
-      /* example
-      input: `function App() { return <h1>Hello</h1>; }`
-      output: `function App() { return React.createElement("h1", null, "Hello"); }`
-      */
-
       const compiledCode = Babel.transform(inputCode, { presets: ['react'] }).code;
-
-      // html document is returned(as a string) which will be passed in iframe (srcDoc)
-      // this html will run the compiled js code in the iframe
       return `
         <html>
           <head></head>
@@ -53,62 +41,94 @@ const Home = () => {
       `;
     }
   };
-  
+
   const html = compileCode(code);
 
   const compareSolution = async () => {
     const iframe = document.querySelector("iframe") as HTMLIFrameElement;
-    
-    // Reload the iframe content
     iframe.srcdoc = html;
-    await new Promise(resolve => {
-      iframe.onload = resolve;
-    });
-    
+    await new Promise(resolve => { iframe.onload = resolve; });
     const iframeDoc = iframe.contentDocument;
     if (!iframeDoc) return setOutput("❌ Iframe not loaded");
-  
+
     const isValid = await validators[ques](iframeDoc, html);
     setOutput(isValid ? "✅ Correct solution" : "❌ Incorrect solution");
   };
 
   return (
-    <div className='h-screen'>
-      <div className='flex justify-center'>
-        {questions[ques]}
-        <button onClick={() => (setQues(ques < (questions.length-1) ? ques+1 : 0))} className="ml-4 px-2 rounded-sm border border-blue-500 bg-blue-500/30">next</button>
-      </div>           
+    <div className="h-screen flex flex-col">
+      {/* Question Section */}
+      <div className="flex justify-between items-center p-4 bg-gray-900 text-white shadow-md">
+        <div className="text-xl font-semibold">
+          {questions[ques]}
+        </div>
+        <button
+          onClick={() => setQues(ques < questions.length - 1 ? ques + 1 : 0)}
+          className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg transition text-sm"
+        >
+          Next
+        </button>
+      </div>
 
-      <div className="grid grid-cols-2 gap-4 p-4">
-                        
-        {/* editor */}
-        <div className="border rounded-lg p-2">
-          <Editor
-            onChange={(value) => setCode(value || '')}
-            defaultLanguage="JavaScript"
-            height={"100%"}
-            defaultValue={code}
-            theme='vs-dark'
-          />
-          
+      <div className="flex flex-1 overflow-hidden">
+        <div className="w-1/2 p-4 overflow-auto bg-gray-900/50">
+          <div className="h-full border rounded-xl shadow-inner overflow-hidden">
+            <Editor
+              onChange={(value) => setCode(value || '')}
+              defaultLanguage="javascript"
+              value={code}
+              theme="vs-dark"
+              height="100%"
+              options={{
+                fontSize: 16,
+                fontFamily: "'Fira Code', monospace",
+                minimap: { enabled: false },
+                lineNumbers: 'on',
+                cursorBlinking: 'expand',
+                smoothScrolling: true,
+                padding: { top: 20 },
+                scrollBeyondLastLine: false,
+                wordWrap: 'on',
+                formatOnType: true,
+                formatOnPaste: true,
+                renderLineHighlight: 'gutter',
+                tabSize: 2,
+                bracketPairColorization: { enabled: true },
+                autoClosingBrackets: 'always',
+                autoClosingQuotes: 'always',
+                quickSuggestions: true,
+                suggestOnTriggerCharacters: true,
+                overviewRulerBorder: false,
+                scrollbar: {
+                  verticalScrollbarSize: 5,
+                  horizontalScrollbarSize: 5,
+                  alwaysConsumeMouseWheel: false,
+                },
+              }}
+            />
+          </div>
         </div>
 
-        {/* output */}
-        <div className="border rounded-lg p-2 relative">
-          <div className='bg-white'>
+        {/* Output */}
+        <div className="w-1/2 p-4 overflow-auto bg-gray-900/50">
+          <div className="relative h-full border rounded-xl shadow-inner overflow-hidden flex flex-col">
             <iframe
               sandbox="allow-scripts allow-same-origin"
               srcDoc={html}
               title="preview"
-              className="w-full h-[80vh] border border-gray-300 rounded-lg shadow-md"
-              />
+              className="flex-1 w-full border-b bg-gray-100"
+            />
+            <div className="p-4 flex justify-between items-center border-t">
+              <span className="text-sm font-medium">{output}</span>
+              <button
+                onClick={() => compareSolution()}
+                className="px-4 py-2 bg-green-600 hover:bg-green-700 rounded-lg transition text-white text-sm"
+              >
+                Submit
+              </button>
+            </div>
           </div>
-          <div>
-            {output}
-          </div>
-          <button className="absolute top-5 right-5 ml-4 px-2 rounded-sm border-2 border-blue-500/20 bg-blue-500" onClick={() => compareSolution()}>Submit</button>
         </div>
-
       </div>
     </div>
   );
