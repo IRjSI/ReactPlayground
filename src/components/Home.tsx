@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import * as Babel from '@babel/standalone';
 import Editor from "@monaco-editor/react";
 import { One, solution as validateOne } from "../challenges/one";
@@ -6,13 +6,20 @@ import { Two, solution as validateTwo } from '../challenges/two';
 import { Three, solution as validateThree } from '../challenges/three';
 import { Four, solution as validateFour } from '../challenges/four';
 import { Five, solution as validateFive } from '../challenges/five';
+import axios from 'axios';
+import { AuthContext } from '../context/authContext';
 
 const Home = () => {
   const validators = [validateOne, validateTwo, validateThree, validateFour, validateFive];
   const [code, setCode] = useState(`function App() {\n  return <h1>Hello</h1>;\n}`);
   const [output, setOutput] = useState('');
   const [ques, setQues] = useState(0);
+  const [completedQues, setCompletedQues] = useState([]);
+
   const questions = [<One />, <Two />, <Three />, <Four />, <Five />];
+
+  //@ts-ignore
+  const { token } = useContext(AuthContext);
 
   const compileCode = (inputCode: string) => {
     try {
@@ -55,14 +62,43 @@ const Home = () => {
     setOutput(isValid ? "✅ Correct solution" : "❌ Incorrect solution");
   };
 
+  const nextClick = async () => {
+    const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/user/add-challenge`,
+      { challenge: ques.toString() },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      }
+    )
+
+    if (response.data.success) {
+      console.log(response.data)
+      setQues(ques < questions.length - 1 ? ques + 1 : 0)
+    }
+  }
+
+  useEffect(() => {
+    axios.get(`${import.meta.env.VITE_BACKEND_URL}/user/get-challenges`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
+        .then((response) => {
+          setCompletedQues(response.data.data.challenges)
+        })
+  }, [token])
+
   return (
     <div className="h-screen flex flex-col">
       <div className="flex justify-between items-center p-4 bg-gray-900 text-white shadow-md">
         <div className="text-xl font-semibold">
-          {questions[ques]}
+          {/* @ts-ignore */}
+          {completedQues.includes(ques.toString()) ? "(solved)" : questions[ques]}
         </div>
         <button
-          onClick={() => setQues(ques < questions.length - 1 ? ques + 1 : 0)}
+          onClick={() => nextClick()}
           className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg transition text-sm"
         >
           Next
