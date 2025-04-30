@@ -95,7 +95,13 @@ const Home = () => {
       <div className="flex justify-between items-center p-4 bg-gray-900 text-white shadow-md">
         <div className="text-xl font-semibold">
           {/* @ts-ignore */}
-          {completedQues.includes(ques.toString()) ? "(solved)" : questions[ques]}
+          {completedQues.includes(ques.toString()) ? (
+            <>
+              {questions[ques]} <span className="text-green-500">(solved)</span>
+            </>
+          ) : (
+            questions[ques]
+          )}
         </div>
         <button
           onClick={() => nextClick()}
