@@ -8,6 +8,7 @@ import { Four, solution as validateFour } from '../challenges/four';
 import { Five, solution as validateFive } from '../challenges/five';
 import axios from 'axios';
 import { AuthContext } from '../context/authContext';
+import LandingPage from '../Pages/LandingPage';
 
 const Home = () => {
   const validators = [validateOne, validateTwo, validateThree, validateFour, validateFive];
@@ -19,7 +20,7 @@ const Home = () => {
   const questions = [<One />, <Two />, <Three />, <Four />, <Five />];
 
   //@ts-ignore
-  const { token } = useContext(AuthContext);
+  const { token, isLoggedIn } = useContext(AuthContext);
 
   const compileCode = (inputCode: string) => {
     try {
@@ -78,17 +79,24 @@ const Home = () => {
     }
   }
 
+  
   useEffect(() => {
+    if (!token) return;
+
     axios.get(`${import.meta.env.VITE_BACKEND_URL}/user/get-challenges`,
       {
         headers: {
           Authorization: `Bearer ${token}`
         }
       })
-        .then((response) => {
+      .then((response) => {
           setCompletedQues(response.data.data.challenges)
         })
+
+    console.log(token)
   }, [token])
+  
+  if (!isLoggedIn) return <LandingPage />;
 
   return (
     <div className="h-screen flex flex-col">
