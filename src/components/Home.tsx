@@ -119,8 +119,8 @@ const Home = () => {
         </button>
       </div>
 
-      <div className="flex flex-1 overflow-hidden">
-        <div className="w-1/2 p-4 overflow-auto bg-gray-900/50">
+      <div className="grid md:grid-cols-2 grid-cols-1 h-full overflow-hidden">
+        <div className="p-4 overflow-auto bg-gray-900/50">
           <div className="h-full border rounded-xl shadow-inner overflow-hidden">
             <Editor
               onChange={(value) => setCode(value || '')}
@@ -159,7 +159,7 @@ const Home = () => {
         </div>
 
         {/* Output */}
-        <div className="w-1/2 p-4 overflow-auto bg-gray-900/50">
+        <div className="p-4 overflow-auto bg-gray-900/50">
           <div className="relative h-full border rounded-xl shadow-inner overflow-hidden flex flex-col">
             <iframe
               sandbox="allow-scripts allow-same-origin"

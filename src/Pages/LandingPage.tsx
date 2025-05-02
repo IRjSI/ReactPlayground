@@ -1,9 +1,16 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import Header from "../components/Header";
 import { Link } from "react-router-dom";
+import { AuthContext } from "../context/authContext";
+import Home from "../components/Home";
 
 const LandingPage = () => {
   const [hovered, setHovered] = useState(false);
+  
+  //@ts-ignore
+  const { isLoggedIn } = useContext(AuthContext); 
+
+  if (isLoggedIn) return <Home />
 
   return (
     <div className="h-screen relative overflow-hidden bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white p-4">
