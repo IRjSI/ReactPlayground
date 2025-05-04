@@ -6,7 +6,7 @@ import { AuthContext } from "../context/authContext";
 
 export default function Profile() {
   const [activeTab, setActiveTab] = useState("overview");
-  const [userInfo, setUserInfo] = useState('');
+  const [userInfo, setUserInfo] = useState<any>();
   const [loading, setLoading] = useState(true);
 
   //@ts-ignore
