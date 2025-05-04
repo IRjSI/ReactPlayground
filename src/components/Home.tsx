@@ -1,16 +1,15 @@
 import { useContext, useEffect, useState } from 'react';
 import * as Babel from '@babel/standalone';
 import Editor from "@monaco-editor/react";
-import { One, solution as validateOne } from "../challenges/one";
-import { Two, solution as validateTwo } from '../challenges/two';
-import { Three, solution as validateThree } from '../challenges/three';
-import { Four, solution as validateFour } from '../challenges/four';
-import { Five, solution as validateFive } from '../challenges/five';
+import { solution as validateOne } from "../challenges/one";
+import { solution as validateTwo } from '../challenges/two';
+import { solution as validateThree } from '../challenges/three';
+import { solution as validateFour } from '../challenges/four';
+import { solution as validateFive } from '../challenges/five';
 import axios from 'axios';
 import { AuthContext } from '../context/authContext';
 import LandingPage from '../Pages/LandingPage';
-import Header from './Header';
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, User } from "lucide-react";
 import { Link } from 'react-router-dom';
 
 const Home = () => {
@@ -19,10 +18,20 @@ const Home = () => {
   const [output, setOutput] = useState('');
   const [ques, setQues] = useState(0);
   const [completedQues, setCompletedQues] = useState([]);
+  const [allQues, setAllQues] = useState([]);
 
-  const questions = [<One />, <Two />, <Three />, <Four />, <Five />];
+  // const questions = [<One />, <Two />, <Three />, <Four />, <Five />];
+  // const questions = [                                                 
+  //   "Challenge 1: Write a jsx that returns a button",
+  //   "Challenge 2: Make a button that changes <i>it's</i> text(to 'click') on click",
+  //   "Challenge 3: Have an input box and show the live input below it",
+  //   "Challenge 4: Show a list of fruits using .map()",
+  //   "Challenge 5: User types a fruit in input → clicks 'Add' → adds to list"
+  // ];
 
-  //@ts-ignore
+  const questions = allQues ? allQues.map((ques: any) => ques.statement) : []
+
+  //@ts-ignore                        
   const { token, isLoggedIn } = useContext(AuthContext);
 
   const compileCode = (inputCode: string) => {
@@ -61,7 +70,7 @@ const Home = () => {
     await new Promise(resolve => { iframe.onload = resolve; });
     const iframeDoc = iframe.contentDocument;
     if (!iframeDoc) return setOutput("❌ Iframe not loaded");
-
+    
     const isValid = await validators[ques](iframeDoc, html);
     setOutput(isValid ? "✅ Correct solution" : "❌ Incorrect solution");
 
@@ -72,8 +81,8 @@ const Home = () => {
   };
 
   const saveProgress = async () => {
-    const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/user/add-challenge`,
-      { challenge: ques.toString() },
+    const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/challenges/add-challenge`,
+      { statement: questions[ques] },
       {
         headers: {
           Authorization: `Bearer ${token}`
@@ -82,6 +91,7 @@ const Home = () => {
     )
 
     if (response.data.success) {
+      console.log(response.data);
       //@ts-ignore
       setCompletedQues([...completedQues, ques.toString()]);
     }
@@ -99,7 +109,18 @@ const Home = () => {
   useEffect(() => {
     if (!token) return;
 
-    axios.get(`${import.meta.env.VITE_BACKEND_URL}/user/get-challenges`,
+    axios.get(`${import.meta.env.VITE_BACKEND_URL}/challenges/get-challenges`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
+      .then((response) => {
+          setAllQues(response.data.data)
+      })
+
+
+    axios.get(`${import.meta.env.VITE_BACKEND_URL}/challenges/get-user-challenges`,
       {
         headers: {
           Authorization: `Bearer ${token}`
@@ -107,9 +128,8 @@ const Home = () => {
       })
       .then((response) => {
           setCompletedQues(response.data.data.challenges)
-        })
+      })
 
-    console.log(token)
   }, [token])
   
   if (!isLoggedIn) return <LandingPage />;
@@ -117,29 +137,41 @@ const Home = () => {
   return (
     <div className="h-screen flex flex-col">
       <div className="flex justify-between items-center p-4 bg-gray-900 text-white shadow-md">
-      <Link to={'/profile'} className="border border-cyan-400/50 px-6 py-2 text-white rounded-full text-sm font-semibold transition-all transform hover:scale-105 duration-300 shadow-lg hover:shadow-cyan-500/30 focus:outline-none">
-        profile
+      <Link to={'/profile'} className="border border-cyan-400/50 px-2 py-2 text-white rounded-full text-sm font-semibold transition-all transform hover:scale-105 duration-300 shadow-lg hover:shadow-cyan-500/30 focus:outline-none">
+        <User />
       </Link>
         <div className="text-xl font-semibold">
           {/* @ts-ignore */}
-          {completedQues.includes(ques.toString()) ? (
-            <>
-              {questions[ques]} <span className="text-green-500">(solved)</span>
-            </>
-          ) : (
-            questions[ques]
-          )}
+          <div className='flex gap-2 justify-center items-center'>
+            {/* <div className='w-8 h-8 flex items-center justify-center rounded-full bg-green-500'>
+              {ques+1}
+            </div> */}
+            <div>
+              {questions[ques]}
+            </div>
+          </div>
+
+          <div>
+            {completedQues.some((item: { statement: string }) => item.statement === questions[ques]) ? (
+              <span className="text-green-500">solved</span>
+            ) : (
+              <span className="text-red-500">unsolved</span>
+            )}
+          </div>
+
         </div>
         <div>
           <button
             onClick={() => prevClick()}
-            className="px-2 py-2 mr-1 bg-blue-600 hover:bg-blue-700 rounded-lg transition text-sm"
+            className={`px-2 py-2 mr-1 ${ques > 0 ? "bg-blue-600 hover:bg-blue-700" : "bg-blue-500 hover:bg-blue-500"} rounded-lg transition text-sm`}
+            disabled = {ques < 1}
             >
             <ChevronLeft />
           </button>
           <button
             onClick={() => nextClick()}
-            className="px-2 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg transition text-sm"
+            className={`px-2 py-2 mr-1 ${ques < questions.length-1 ? "bg-blue-600 hover:bg-blue-700" : "bg-blue-500 hover:bg-blue-500"} rounded-lg transition text-sm`}
+            disabled = {ques > questions.length - 2}
             >
             <ChevronRight />
           </button>

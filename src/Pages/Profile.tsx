@@ -1,12 +1,13 @@
 import axios from "axios";
-import { ChevronLeft } from "lucide-react";
+import { ChevronLeft, LoaderCircle } from "lucide-react";
 import { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../context/authContext";
 
 export default function Profile() {
   const [activeTab, setActiveTab] = useState("overview");
-  const [userInfo, setUserInfo] = useState<any>();
+  const [userInfo, setUserInfo] = useState('');
+  const [loading, setLoading] = useState(true);
 
   //@ts-ignore
   const { token } = useContext(AuthContext);
@@ -39,7 +40,7 @@ export default function Profile() {
   };
 
   // Calculate completion percentage
-  const completionPercentage = Math.round(((userInfo?.challenges).length / userData.totalChallenges) * 100);
+  const completionPercentage = Math.round(userInfo ? ((userInfo?.challenges).length / userData.totalChallenges) * 100 : 0);
 
   const renderTabContent = () => {
     switch(activeTab) {
@@ -49,7 +50,7 @@ export default function Profile() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <StatCard 
                 title="Challenges Completed" 
-                value={`${(userInfo?.challenges).length}/${userData.totalChallenges}`}
+                value={`${userInfo ? (userInfo?.challenges).length : 0}/${userData.totalChallenges}`}
                 icon="📝"
                 color="bg-cyan-400"
               />
@@ -78,7 +79,7 @@ export default function Profile() {
                 </div>
                 <span className="text-white font-medium">{completionPercentage}%</span>
               </div>
-              <p className="text-gray-300 text-sm">You've completed {(userInfo?.challenges).length} out of {userData.totalChallenges} challenges</p>
+              <p className="text-gray-300 text-sm">You've completed {userInfo ? (userInfo?.challenges).length : 0} out of {userData.totalChallenges} challenges</p>
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -201,25 +202,34 @@ export default function Profile() {
   };
 
   useEffect(() => {
-    axios.get(`${import.meta.env.VITE_BACKEND_URL}/user/get-user`,{
+    setLoading(true)
+    if (!token) {
+      console.warn("Token is not available");
+      return;
+    }
+    axios.get(`${import.meta.env.VITE_BACKEND_URL}/user/get-user`, {
       headers: {
         Authorization: `Bearer ${token}`
       }
     })
-      .then((response) => setUserInfo(response.data.data))
-      .catch((err) => console.log(err))
-  }, [token])
+      .then((response) => {
+        setUserInfo(response.data.data);
+      })
+      .catch((err) => console.error("Error fetching user data:", err))
+      .finally(() => setLoading(false))
+  }, [token]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white p-6">
       <div className="absolute inset-0 bg-[radial-gradient(circle,#0ff_1px,transparent_1px)] [background-size:40px_40px] opacity-20 animate-moveDots" />
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.1)_0%,transparent_60%)]" />
       
+      {!loading ? (
       <div className="max-w-6xl mx-auto relative z-10">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
             <Link to='/home' title="Back" className=""><ChevronLeft /></Link>
           <div>
-            <h1 className="text-3xl font-bold text-white">Welcome back, {userInfo?.username}</h1>
+            <h1 className="text-3xl font-bold text-white">Welcome back, {userInfo?.username ? userInfo?.username : 'Guest'}</h1>
             <p className="text-gray-300">Your React mastery journey continues</p>
           </div>
           <div className="flex items-center gap-4">
@@ -258,6 +268,14 @@ export default function Profile() {
         
         {renderTabContent()}
       </div>
+      )
+      : (
+        <div className="flex justify-center items-center h-screen">
+          <div className="text-cyan-400 text-xl">
+            <LoaderCircle className="animate-spin" />
+          </div>
+        </div>
+      )}
     </div>
   );
 }
