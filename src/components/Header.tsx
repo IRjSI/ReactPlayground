@@ -35,7 +35,6 @@ function Header() {
                     </Link>
                   </div>
                 </>
-              )
             </ul>
           </div>
         </div>
