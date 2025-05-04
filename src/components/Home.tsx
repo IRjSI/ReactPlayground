@@ -9,6 +9,9 @@ import { Five, solution as validateFive } from '../challenges/five';
 import axios from 'axios';
 import { AuthContext } from '../context/authContext';
 import LandingPage from '../Pages/LandingPage';
+import Header from './Header';
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { Link } from 'react-router-dom';
 
 const Home = () => {
   const validators = [validateOne, validateTwo, validateThree, validateFour, validateFive];
@@ -61,9 +64,14 @@ const Home = () => {
 
     const isValid = await validators[ques](iframeDoc, html);
     setOutput(isValid ? "✅ Correct solution" : "❌ Incorrect solution");
+
+    //@ts-ignore
+    if (isValid && !completedQues.includes(ques.toString())) {
+      await saveProgress();
+    }
   };
 
-  const nextClick = async () => {
+  const saveProgress = async () => {
     const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/user/add-challenge`,
       { challenge: ques.toString() },
       {
@@ -74,9 +82,17 @@ const Home = () => {
     )
 
     if (response.data.success) {
-      console.log(response.data)
-      setQues(ques < questions.length - 1 ? ques + 1 : 0)
+      //@ts-ignore
+      setCompletedQues([...completedQues, ques.toString()]);
     }
+  }
+
+  const nextClick = async () => {
+    setQues(ques < questions.length - 1 ? ques + 1 : 0)
+  }
+
+  const prevClick = async () => {
+    setQues(ques > 0 ? ques - 1 : questions.length - 1)
   }
 
   
@@ -101,6 +117,9 @@ const Home = () => {
   return (
     <div className="h-screen flex flex-col">
       <div className="flex justify-between items-center p-4 bg-gray-900 text-white shadow-md">
+      <Link to={'/profile'} className="border border-cyan-400/50 px-6 py-2 text-white rounded-full text-sm font-semibold transition-all transform hover:scale-105 duration-300 shadow-lg hover:shadow-cyan-500/30 focus:outline-none">
+        profile
+      </Link>
         <div className="text-xl font-semibold">
           {/* @ts-ignore */}
           {completedQues.includes(ques.toString()) ? (
@@ -111,17 +130,25 @@ const Home = () => {
             questions[ques]
           )}
         </div>
-        <button
-          onClick={() => nextClick()}
-          className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg transition text-sm"
-        >
-          Next
-        </button>
+        <div>
+          <button
+            onClick={() => prevClick()}
+            className="px-2 py-2 mr-1 bg-blue-600 hover:bg-blue-700 rounded-lg transition text-sm"
+            >
+            <ChevronLeft />
+          </button>
+          <button
+            onClick={() => nextClick()}
+            className="px-2 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg transition text-sm"
+            >
+            <ChevronRight />
+          </button>
+        </div>
       </div>
 
       <div className="grid md:grid-cols-2 grid-cols-1 h-full overflow-hidden">
         <div className="p-4 overflow-auto bg-gray-900/50">
-          <div className="h-full border rounded-xl shadow-inner overflow-hidden">
+          <div className="h-full border rounded-md shadow-inner overflow-hidden">
             <Editor
               onChange={(value) => setCode(value || '')}
               defaultLanguage="javascript"
@@ -160,7 +187,7 @@ const Home = () => {
 
         {/* Output */}
         <div className="p-4 overflow-auto bg-gray-900/50">
-          <div className="relative h-full border rounded-xl shadow-inner overflow-hidden flex flex-col">
+          <div className="relative h-full border rounded-md shadow-inner overflow-hidden flex flex-col">
             <iframe
               sandbox="allow-scripts allow-same-origin"
               srcDoc={html}
