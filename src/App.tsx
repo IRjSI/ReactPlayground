@@ -6,6 +6,7 @@ import Login from './Pages/Login'
 import Profile from './Pages/Profile'
 import { useContext } from 'react'
 import { AuthContext } from './context/authContext'
+import Signup from './Pages/Signup'
 
 function App() {
   //@ts-ignore
@@ -22,6 +23,7 @@ function App() {
           </>
         ) : null }
         <Route path='/login' element={<Login />} />
+        <Route path='/signup' element={<Signup />} />
       </Routes>
     </div>
   )
