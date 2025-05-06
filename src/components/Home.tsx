@@ -20,6 +20,7 @@ const Home = () => {
   const [ques, setQues] = useState(0);
   const [completedQues, setCompletedQues] = useState([]);
   const [allQues, setAllQues] = useState([]);
+  const [solutions, setSolutions] = useState([]);
 
   // const questions = [<One />, <Two />, <Three />, <Four />, <Five />];
   // const questions = [                                                 
@@ -79,8 +80,27 @@ const Home = () => {
     if (isValid && !completedQues.includes(ques.toString())) {
       setRefetch(prev => !prev)
       await saveProgress();
+      await addSolution();
     }
   };
+
+  const addSolution = async () => {
+    const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/user/add-solution`,
+      { 
+        statement: questions[ques],
+        solution: code 
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      }
+    )
+
+    if (response.data.success) {
+      console.log(response.data);
+    }
+  }
 
   const saveProgress = async () => {
     const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/challenges/add-challenge`,
@@ -137,6 +157,16 @@ const Home = () => {
       })
       .then((response) => {
           setCompletedQues(response.data.data.challenges)
+      })
+
+    axios.get(`${import.meta.env.VITE_BACKEND_URL}/user/get-solutions`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
+      .then((response) => {
+        setSolutions(response.data.data.solutions)
       })
       
   }, [token])
