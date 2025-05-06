@@ -18,8 +18,8 @@ const Home = () => {
   const [output, setOutput] = useState('');
   const [refetch, setRefetch] = useState(false);
   const [ques, setQues] = useState(0);
-  const [completedQues, setCompletedQues] = useState([]);
   const [allQues, setAllQues] = useState([]);
+  const [completedQues, setCompletedQues] = useState([]);
   const [solutions, setSolutions] = useState([]);
 
   // const questions = [<One />, <Two />, <Three />, <Four />, <Five />];
@@ -31,7 +31,7 @@ const Home = () => {
   //   "Challenge 5: User types a fruit in input → clicks 'Add' → adds to list"
   // ];
 
-  const questions = allQues ? allQues.map((ques: any) => ques.statement) : []
+  const questions: any = allQues ? allQues.map((ques: any) => ques.statement) : []
 
   //@ts-ignore                        
   const { token, isLoggedIn, logout } = useContext(AuthContext);
@@ -226,7 +226,11 @@ const Home = () => {
             <Editor
               onChange={(value) => setCode(value || '')}
               defaultLanguage="javascript"
-              value={code}
+              value={
+                completedQues.some((item: { statement: string }) => item.statement === questions[ques])
+                ? (solutions.find((solution: { statement: string }) => solution.statement === questions[ques])?.solution)
+                : code
+              }
               theme="vs-dark"
               height="100%"
               options={{
