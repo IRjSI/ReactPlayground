@@ -20,7 +20,7 @@ const Home = () => {
   const [ques, setQues] = useState(0);
   const [allQues, setAllQues] = useState([]);
   const [completedQues, setCompletedQues] = useState([]);
-  const [solutions, setSolutions] = useState([]);
+  const [solutions, setSolutions] = useState<{ statement: string, solution: string }[]>([]);
 
   // const questions = [<One />, <Two />, <Three />, <Four />, <Five />];
   // const questions = [                                                 
@@ -31,7 +31,7 @@ const Home = () => {
   //   "Challenge 5: User types a fruit in input → clicks 'Add' → adds to list"
   // ];
 
-  const questions: any = allQues ? allQues.map((ques: any) => ques.statement) : []
+  const questions = allQues ? allQues.map((ques: { statement: string }) => ques.statement) : []
 
   //@ts-ignore                        
   const { token, isLoggedIn, logout } = useContext(AuthContext);
