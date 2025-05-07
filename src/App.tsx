@@ -7,6 +7,7 @@ import Profile from './Pages/Profile'
 import { useContext } from 'react'
 import { AuthContext } from './context/authContext'
 import Signup from './Pages/Signup'
+import AddChallenge from './components/AddChallenge'
 
 function App() {
   //@ts-ignore
@@ -20,6 +21,7 @@ function App() {
           <>
             <Route path='/home' element={<Home />} />
             <Route path='/profile' element={<Profile />} />
+            <Route path='/challenge' element={<AddChallenge />} />
           </>
         ) : null }
         <Route path='/login' element={<Login />} />

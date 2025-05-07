@@ -32,6 +32,7 @@ const Home = () => {
   // ];
 
   const questions = allQues ? allQues.map((ques: { statement: string }) => ques.statement) : []
+  const allSolutions = allQues ? allQues.map((ques: { solution: string }) => ques.solution) : []
 
   //@ts-ignore                        
   const { token, isLoggedIn, logout } = useContext(AuthContext);
@@ -75,6 +76,8 @@ const Home = () => {
     
     const isValid = await validators[ques](iframeDoc, html);
     setOutput(isValid ? "correct" : "incorrect");
+
+    const isValid2 = allSolutions[ques] == code
 
     //@ts-ignore
     if (isValid && !completedQues.includes(ques.toString())) {
@@ -176,7 +179,7 @@ const Home = () => {
   return (
     <div className="h-screen flex flex-col">
       <div className="flex justify-between items-center p-4 bg-gray-900 text-white shadow-md">
-      <Link to={'/profile'} className="border border-cyan-400/50 px-2 py-2 text-white rounded-full text-sm font-semibold transition-all transform hover:scale-105 duration-300 shadow-lg hover:shadow-cyan-500/30 focus:outline-none">
+      <Link to={'/profile'} className="border border-cyan-400/50 px-2 py-2 text-white rounded-lg text-sm font-semibold transition-all transform hover:scale-105 duration-300 shadow-lg hover:shadow-cyan-500/30 focus:outline-none">
         <User size={18} />
       </Link>
         <div className="text-xl font-semibold">
@@ -205,18 +208,21 @@ const Home = () => {
             className={`px-2 py-2 ${ques > 0 ? "bg-blue-600 hover:bg-blue-700" : "bg-blue-500 hover:bg-blue-500"} rounded-lg transition text-sm`}
             disabled = {ques < 1}
             >
-            <ChevronLeft />
+            <ChevronLeft size={18} />
           </button>
           <button
             onClick={() => nextClick()}
             className={`px-2 py-2 mr-1 ${ques < questions.length-1 ? "bg-blue-600 hover:bg-blue-700" : "bg-blue-500 hover:bg-blue-500"} rounded-lg transition text-sm`}
             disabled = {ques > questions.length - 2}
             >
-            <ChevronRight />
+            <ChevronRight size={18} />
           </button>
-          <div className='cursor-pointer border border-red-500 bg-red-600/20 px-2 py-2 rounded-full text-red-500 transition-all transform hover:scale-105 duration-300 shadow-lg hover:shadow-red-500/30 focus:outline-none'>
+          <div className='cursor-pointer border border-red-500 bg-red-600/20 px-2 py-2 rounded-lg text-red-500 transition-all transform hover:scale-105 duration-300 shadow-lg hover:shadow-red-500/30 focus:outline-none'>
             <LogOutIcon onClick={logoutClick} size={18} />
           </div>
+          <Link to={'/challenge'} className='cursor-pointer border border-cyan-500 bg-cyan-600/20 px-2 py-2 rounded-lg text-cyan-500 transition-all transform hover:scale-105 duration-300 shadow-lg hover:shadow-cyan-500/30 focus:outline-none ml-1'>
+            + Add Challenge
+          </Link>
         </div>
       </div>
 
