@@ -32,8 +32,9 @@ const Home = () => {
   // ];
 
   const questions = allQues ? allQues.map((ques: { statement: string }) => ques.statement) : []
-  const allSolutions = allQues ? allQues.map((ques: { solution: string }) => ques.solution) : []
-
+  
+  // const allSolutions = allQues ? allQues.map((ques: { solution: string }) => ques.solution) : []
+  
   //@ts-ignore                        
   const { token, isLoggedIn, logout } = useContext(AuthContext);
 
@@ -77,7 +78,7 @@ const Home = () => {
     const isValid = await validators[ques](iframeDoc, html);
     setOutput(isValid ? "correct" : "incorrect");
 
-    const isValid2 = allSolutions[ques] == code
+    // const isValid2 = allSolutions[ques] == code
 
     //@ts-ignore
     if (isValid && !completedQues.includes(ques.toString())) {
