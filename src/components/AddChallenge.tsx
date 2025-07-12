@@ -11,17 +11,44 @@ const AddChallenge = () => {
     statement: "",
     description: "",
     difficulty: "easy",
-    solution: ""
+    solution: "",
+    tests: [""], // array of strings
   });
 
   //@ts-ignore
   const { token } =useContext(AuthContext);
 
   const handleChange = (e: any) => {
-    const { name, value } = e.target;
+    const { value, name } = e.target;
     setFormData(prev => ({
       ...prev,
       [name]: value
+    }))
+  }
+
+  const handleArrayChange = (index: number, field: string, value: string): void => {
+    setFormData((prev: any) => {
+      const newArray = [...prev[field]] // create copy of the array(field = tests), so newArray = tests
+      newArray[index] = value // update value at a particular index
+      // return the object with updated array
+      return {
+        ...prev,
+        [field]: newArray // updated array
+      }
+    })
+  }
+
+  const addArrayItem = (field: string) => {
+    setFormData((prev: any) => ({
+      ...prev,
+      [field]: [...prev[field], ""] // adds an empty string at the end of the array
+    }));
+  };
+
+  const removeArrayItem = (index: number,field: string) => {
+    setFormData((prev: any) => ({
+      ...prev,
+      [field]: prev[field].filter((_: number, i: number) => i !== index)
     }));
   };
 
@@ -29,7 +56,7 @@ const AddChallenge = () => {
     e.preventDefault();
     setLoading(true);
     
-    console.log("Submitting challenge:", formData);
+    // console.log("Submitting challenge:", formData);
     
     try {
       const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/challenges/create-challenge`, formData, {
@@ -43,7 +70,8 @@ const AddChallenge = () => {
         statement: "",
         difficulty: "",
         description: "",
-        solution: ""
+        solution: "",
+        tests: [""]
       })
     } catch (error) {
       console.log(error)
@@ -126,6 +154,46 @@ const AddChallenge = () => {
               className="w-full bg-gray-800 border border-gray-700 focus:border-cyan-400 rounded-lg p-3 text-white focus:ring-1 focus:ring-cyan-400 focus:outline-none transition-all font-mono"
               placeholder="// Provide the solution code"
             />
+          </div>
+
+          <div className="mb-6">
+            <div className="flex justify-between items-center mb-1">
+              <label className="block text-sm font-medium text-gray-300">Testcases</label>
+              <button
+                type="button"
+                onClick={() => addArrayItem("tests")}
+                className="text-cyan-400 hover:text-cyan-300 text-sm flex items-center gap-1"
+              >
+                <span>Add Testcases</span>
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                </svg>
+              </button>
+            </div>
+
+            {formData.tests.map((test, index) => (
+              <div key={index} className="flex gap-2 mb-2">
+                <input
+                  type="text"
+                  value={test}
+                  onChange={(e) => handleArrayChange(index, "tests", e.target.value)}
+                  className="flex-1 bg-gray-800 border border-gray-700 focus:border-cyan-400 rounded-lg p-3 text-white focus:ring-1 focus:ring-cyan-400 focus:outline-none transition-all"
+                  placeholder={`test ${index + 1}`}
+                />
+                {formData.tests.length > 0 && (
+                  <button
+                    type="button"
+                    onClick={() => removeArrayItem(index,"tests")}
+                    className="bg-red-500/20 hover:bg-red-500/30 w-10 flex items-center justify-center rounded-lg text-red-400"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                )}
+              </div>
+            ))}
+
           </div>
 
           <div className="flex justify-end">

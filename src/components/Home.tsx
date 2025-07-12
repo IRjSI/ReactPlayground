@@ -1,45 +1,57 @@
 import { useContext, useEffect, useState } from 'react';
+import axios from 'axios';
 import * as Babel from '@babel/standalone';
 import Editor from "@monaco-editor/react";
-import { solution as validateOne } from "../challenges/one";
-import { solution as validateTwo } from '../challenges/two';
-import { solution as validateThree } from '../challenges/three';
-import { solution as validateFour } from '../challenges/four';
-import { solution as validateFive } from '../challenges/five';
-import axios from 'axios';
-import { AuthContext } from '../context/authContext';
-import LandingPage from '../Pages/LandingPage';
-import { ChevronLeft, ChevronRight, LogOutIcon, User } from "lucide-react";
+import { 
+  solutionOne as validateOne, 
+  solutionTwo as validateTwo, 
+  solutionThree as validateThree, 
+  solutionFour as validateFour, 
+  solutionFive as validateFive, 
+  solutionSix as validateSix, 
+  solutionSeven as validateSeven, 
+  solutionEight as validateEight, 
+  solutionNine as validateNine, 
+  solutionTen as validateTen 
+} from "../challenges/challenges";
+import { AuthContext, AuthContextType } from '../context/authContext';
+import { 
+  ChevronLeft, 
+  ChevronRight, 
+  LogOutIcon, 
+  User 
+} from "lucide-react";
 import { Link } from 'react-router-dom';
+import LandingPage from '../Pages/LandingPage';
 
 const Home = () => {
-  const validators = [validateOne, validateTwo, validateThree, validateFour, validateFive];
-  const [code, setCode] = useState(`function App() {\n  return <h1>Hello</h1>;\n}`);
+  // to check the solution submitted by the user
+  const validators = [validateOne, validateTwo, validateThree, validateFour, validateFive, validateSix, validateSeven, validateEight, validateNine, validateTen];
+
+  // state for code written by the user
+  const [code, setCode] = useState(`// React is imported by default.\n// to use hooks, for eg. useState use it like React.useState()\nfunction App() {\n  return <h1>Hello</h1>;\n}`);
+  // output of the code
   const [output, setOutput] = useState('');
+  // to trigger useEffect
   const [refetch, setRefetch] = useState(false);
+  // number of challenges(for indexing)
   const [ques, setQues] = useState(0);
+  // to set all the challenges available in the db
   const [allQues, setAllQues] = useState([]);
+  // to set the tag: 'solved' or 'unsolved'
   const [completedQues, setCompletedQues] = useState([]);
+  // to set the existing solutions of the user
   const [solutions, setSolutions] = useState<{ statement: string, solution: string }[]>([]);
 
-  // const questions = [<One />, <Two />, <Three />, <Four />, <Five />];
-  // const questions = [                                                 
-  //   "Challenge 1: Write a jsx that returns a button",
-  //   "Challenge 2: Make a button that changes <i>it's</i> text(to 'click') on click",
-  //   "Challenge 3: Have an input box and show the live input below it",
-  //   "Challenge 4: Show a list of fruits using .map()",
-  //   "Challenge 5: User types a fruit in input → clicks 'Add' → adds to list"
-  // ];
-
+  // set all the questions statements
   const questions = allQues ? allQues.map((ques: { statement: string }) => ques.statement) : []
   
-  // const allSolutions = allQues ? allQues.map((ques: { solution: string }) => ques.solution) : []
-  
-  //@ts-ignore                        
-  const { token, isLoggedIn, logout } = useContext(AuthContext);
+  const { token, isLoggedIn, logout } = useContext(AuthContext) as AuthContextType;
 
+  // Generates an HTML document with compiled user code and React runtime
   const compileCode = (inputCode: string) => {
     try {
+      // Use Babel to convert JSX to plain JavaScript using the react preset (refer to Readme for more details)
       const compiledCode = Babel.transform(inputCode, { presets: ['react'] }).code;
       return `
         <html>
@@ -66,30 +78,49 @@ const Home = () => {
     }
   };
 
+  // to store html returned
   const html = compileCode(code);
 
+  // check if the user submitted code is correct or not
   const compareSolution = async () => {
+    // get the iframe
     const iframe = document.querySelector("iframe") as HTMLIFrameElement;
+    // set the source as html(compiledCode)
     iframe.srcdoc = html;
     await new Promise(resolve => { iframe.onload = resolve; });
     const iframeDoc = iframe.contentDocument;
     if (!iframeDoc) return setOutput("❌ Iframe not loaded");
     
+    // with the help of the validators check the correctness of the solution
     const isValid = await validators[ques](iframeDoc, html);
     setOutput(isValid ? "correct" : "incorrect");
-
-    // const isValid2 = allSolutions[ques] == code
-
-    //@ts-ignore
-    if (isValid && !completedQues.includes(ques.toString())) {
+    
+    // if the solution is correct
+    if (isValid) {
+      // trigger refetching the challenges since the users completed challenges changed
       setRefetch(prev => !prev)
+      // save progress -> add the challenge to the User's table
       await saveProgress();
+      // add solution -> add the solution in the Solution's table
       await addSolution();
     }
   };
 
+  // save progress -> add the challenge to the User's table
+  const saveProgress = async () => {
+    await axios.post(`${import.meta.env.VITE_BACKEND_URL}/challenges/add-challenge`,
+      { statement: questions[ques] },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      }
+    )
+  }
+
+  // add solution -> add the solution in the Solution's table
   const addSolution = async () => {
-    const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/user/add-solution`,
+    await axios.post(`${import.meta.env.VITE_BACKEND_URL}/solutions/add-solution`,
       { 
         statement: questions[ques],
         solution: code 
@@ -100,41 +131,24 @@ const Home = () => {
         }
       }
     )
-
-    if (response.data.success) {
-      console.log(response.data);
-    }
   }
 
-  const saveProgress = async () => {
-    const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/challenges/add-challenge`,
-      { statement: questions[ques] },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      }
-    )
-
-    if (response.data.success) {
-      console.log(response.data);
-      //@ts-ignore
-      setCompletedQues([...completedQues, ques.toString()]);
-    }
-  }
-
+  // to display next challenge
   const nextClick = async () => {
     setQues(ques < questions.length - 1 ? ques + 1 : 0)
   }
 
+  // to display previous challenge
   const prevClick = async () => {
     setQues(ques > 0 ? ques - 1 : questions.length - 1)
   }
 
+  // to logout the user
   const logoutClick = () => {
     logout()
   }
   
+  // useEffect to fetch all the challenges nad store in allQues
   useEffect(() => {
     if (!token) return;
 
@@ -145,11 +159,12 @@ const Home = () => {
         }
       })
       .then((response) => {
-          setAllQues(response.data.data)
+        setAllQues(response.data.data)
       })
 
   }, [token, refetch])
 
+  // useEffect to fetch all the user's completed challenges and solutions
   useEffect(() => {
     if (!token) return;
 
@@ -160,10 +175,10 @@ const Home = () => {
         }
       })
       .then((response) => {
-          setCompletedQues(response.data.data.challenges)
+        setCompletedQues(response.data.data.challenges)
       })
 
-    axios.get(`${import.meta.env.VITE_BACKEND_URL}/user/get-solutions`,
+    axios.get(`${import.meta.env.VITE_BACKEND_URL}/solutions/get-solutions`,
       {
         headers: {
           Authorization: `Bearer ${token}`
@@ -173,28 +188,34 @@ const Home = () => {
         setSolutions(response.data.data.solutions)
       })
       
-  }, [token])
+  }, [token, ques])
   
+  // to redirect to Landing page if not signed in
   if (!isLoggedIn) return <LandingPage />;
 
   return (
     <div className="h-screen flex flex-col">
+
       <div className="flex justify-between items-center p-4 bg-gray-900 text-white shadow-md">
-      <Link to={'/profile'} className="border border-cyan-400/50 px-2 py-2 text-white rounded-lg text-sm font-semibold transition-all transform hover:scale-105 duration-300 shadow-lg hover:shadow-cyan-500/30 focus:outline-none">
-        <User size={18} />
-      </Link>
+
+        <Link to={'/profile'} className="border border-cyan-400/50 px-2 py-2 text-white rounded-lg text-sm font-semibold transition-all transform hover:scale-105 duration-300 shadow-lg hover:shadow-cyan-500/30 focus:outline-nonej">
+          <User size={18} />
+        </Link>
+        
         <div className="text-xl font-semibold">
-          {/* @ts-ignore */}
           <div className='flex gap-2 justify-center items-center'>
-            {/* <div className='w-8 h-8 flex items-center justify-center rounded-full bg-green-500'>
-              {ques+1}
-            </div> */}
             <div>
+              {/* 
+                displaying the challenge
+                questions -> array of statements
+                ques -> 0, 1, 2, ...
+              */}
               {questions[ques]}
             </div>
           </div>
 
           <div>
+            {/* if completed challenges' statement matches with any of the challenges, it is solved */}
             {completedQues.some((item: { statement: string }) => item.statement === questions[ques]) ? (
               <span className="text-green-500">solved</span>
             ) : (
@@ -203,7 +224,7 @@ const Home = () => {
           </div>
 
         </div>
-        <div className='flex justify-center items-center gap-1'>
+        <div className='flex justify-center items-center gap-2'>
           <button
             onClick={() => prevClick()}
             className={`px-2 py-2 ${ques > 0 ? "bg-blue-600 hover:bg-blue-700" : "bg-blue-500 hover:bg-blue-500"} rounded-lg transition text-sm`}
@@ -213,7 +234,7 @@ const Home = () => {
           </button>
           <button
             onClick={() => nextClick()}
-            className={`px-2 py-2 mr-1 ${ques < questions.length-1 ? "bg-blue-600 hover:bg-blue-700" : "bg-blue-500 hover:bg-blue-500"} rounded-lg transition text-sm`}
+            className={`px-2 py-2 ${ques < questions.length-1 ? "bg-blue-600 hover:bg-blue-700" : "bg-blue-500 hover:bg-blue-500"} rounded-lg transition text-sm`}
             disabled = {ques > questions.length - 2}
             >
             <ChevronRight size={18} />
@@ -221,17 +242,15 @@ const Home = () => {
           <div className='cursor-pointer border border-red-500 bg-red-600/20 px-2 py-2 rounded-lg text-red-500 transition-all transform hover:scale-105 duration-300 shadow-lg hover:shadow-red-500/30 focus:outline-none'>
             <LogOutIcon onClick={logoutClick} size={18} />
           </div>
-          <Link to={'/challenge'} className='cursor-pointer border border-cyan-500 bg-cyan-600/20 px-2 py-2 rounded-lg text-cyan-500 transition-all transform hover:scale-105 duration-300 shadow-lg hover:shadow-cyan-500/30 focus:outline-none ml-1'>
-            + Add Challenge
-          </Link>
         </div>
       </div>
 
       <div className="grid md:grid-cols-2 grid-cols-1 h-full overflow-hidden">
         <div className="p-4 overflow-auto bg-gray-900/50">
           <div className="h-full border rounded-md shadow-inner overflow-hidden">
+            {/* editor for writing the code (monaco editor) */}
             <Editor
-              onChange={(value) => setCode(value || '')}
+              onChange={(value) => setCode(value || "")}
               defaultLanguage="javascript"
               value={
                 completedQues.some((item: { statement: string }) => item.statement === questions[ques])

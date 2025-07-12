@@ -22,7 +22,7 @@ const LandingPage = () => {
       <div className="absolute inset-0 bg-[radial-gradient(circle,#0ff_1px,transparent_1px)] [background-size:40px_40px] opacity-20 animate-moveDots" />
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.1)_0%,transparent_60%)]" />
 
-      <div className="flex flex-col items-center justify-center text-center text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-semibold h-1/2 relative z-10 space-y-4 sm:space-y-6 px-2 mt-8">
+      <div className="flex flex-col items-center justify-center text-center text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-semibold h-1/2 relative z-10 space-y-4 sm:space-y-6 px-2 mt-24">
         
         <div 
           onMouseEnter={() => setHovered(true)}
