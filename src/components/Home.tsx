@@ -2,18 +2,18 @@ import { useContext, useEffect, useState } from 'react';
 import axios from 'axios';
 import * as Babel from '@babel/standalone';
 import Editor from "@monaco-editor/react";
-import { 
-  solutionOne as validateOne, 
-  solutionTwo as validateTwo, 
-  solutionThree as validateThree, 
-  solutionFour as validateFour, 
-  solutionFive as validateFive, 
-  solutionSix as validateSix, 
-  solutionSeven as validateSeven, 
-  solutionEight as validateEight, 
-  solutionNine as validateNine, 
-  solutionTen as validateTen 
-} from "../challenges/challenges";
+// import { 
+//   solutionOne as validateOne, 
+//   solutionTwo as validateTwo, 
+//   solutionThree as validateThree, 
+//   solutionFour as validateFour, 
+//   solutionFive as validateFive, 
+//   solutionSix as validateSix, 
+//   solutionSeven as validateSeven, 
+//   solutionEight as validateEight, 
+//   solutionNine as validateNine, 
+//   solutionTen as validateTen 
+// } from "../challenges/challenges";
 import { AuthContext, AuthContextType } from '../context/authContext';
 import { 
   ChevronLeft, 
@@ -24,9 +24,13 @@ import {
 import { Link } from 'react-router-dom';
 import LandingPage from '../Pages/LandingPage';
 
+import { io } from "socket.io-client";
+
+const socket = io("http://localhost:4000");
+
 const Home = () => {
   // to check the solution submitted by the user
-  const validators = [validateOne, validateTwo, validateThree, validateFour, validateFive, validateSix, validateSeven, validateEight, validateNine, validateTen];
+  // const validators = [validateOne, validateTwo, validateThree, validateFour, validateFive, validateSix, validateSeven, validateEight, validateNine, validateTen];
 
   // state for code written by the user
   const [code, setCode] = useState(`// React is imported by default.\n// to use hooks, for eg. useState use it like React.useState()\nfunction App() {\n  return <h1>Hello</h1>;\n}`);
@@ -38,7 +42,7 @@ const Home = () => {
   const [ques, setQues] = useState(0);
   // to set all the challenges available in the db
   const [allQues, setAllQues] = useState([]);
-  // to set the tag: 'solved' or 'unsolved'
+  // to set the question as 'solved' or 'unsolved'
   const [completedQues, setCompletedQues] = useState([]);
   // to set the existing solutions of the user
   const [solutions, setSolutions] = useState<{ statement: string, solution: string }[]>([]);
@@ -48,6 +52,7 @@ const Home = () => {
   
   const { token, isLoggedIn, logout } = useContext(AuthContext) as AuthContextType;
 
+  // for showing the preview
   // Generates an HTML document with compiled user code and React runtime
   const compileCode = (inputCode: string) => {
     try {
@@ -88,23 +93,38 @@ const Home = () => {
     // set the source as html(compiledCode)
     iframe.srcdoc = html;
     await new Promise(resolve => { iframe.onload = resolve; });
-    const iframeDoc = iframe.contentDocument;
-    if (!iframeDoc) return setOutput("❌ Iframe not loaded");
+    const iframeDoc = iframe.contentDocument?.documentElement.outerHTML;
+    if (!iframeDoc) return setOutput("Iframe not loaded");
     
     // with the help of the validators check the correctness of the solution
-    const isValid = await validators[ques](iframeDoc, html);
-    setOutput(isValid ? "correct" : "incorrect");
+    await submitSolution(code)
+    
     
     // if the solution is correct
-    if (isValid) {
-      // trigger refetching the challenges since the users completed challenges changed
-      setRefetch(prev => !prev)
-      // save progress -> add the challenge to the User's table
-      await saveProgress();
-      // add solution -> add the solution in the Solution's table
-      await addSolution();
-    }
+    
   };
+
+  async function submitSolution(iframeDoc: any) {
+    setOutput("checking...");
+    const res = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/submission/submit`, { iframeDoc });
+    const { solutionId } = res.data;
+
+    // Register for result
+    socket.emit("register", solutionId);
+
+    socket.on("solutionResult", async (data: any) => {
+      if (data.solutionId === solutionId) {
+        setOutput(data.result == "valid" ? "Correct Solution" : "Incorrect Solution");
+        if (data.result == "valid") {
+          setRefetch(prev => !prev);
+          // save progress -> add the challenge to the User's table
+          await saveProgress();
+          // add solution -> add the solution in the Solution's table
+          await addSolution();
+        }
+      }
+    });
+  }
 
   // save progress -> add the challenge to the User's table
   const saveProgress = async () => {
@@ -148,7 +168,7 @@ const Home = () => {
     logout()
   }
   
-  // useEffect to fetch all the challenges nad store in allQues
+  // useEffect to fetch all the challenges and store in allQues
   useEffect(() => {
     if (!token) return;
 
@@ -299,7 +319,7 @@ const Home = () => {
               className="flex-1 w-full border-b bg-gray-100"
             />
             <div className="p-4 flex justify-between items-center border-t">
-              <span className={`${output === "correct" ? "text-green-500 text-sm font-medium" : "text-red-500 text-sm font-medium"}`}>{output === 'correct' ? '✅ Correct Solution' : '❌ Incorrect Solution'}</span>
+              <span className={`text-sm font-medium text-cyan-500`}>{output}</span>
               <button
                 onClick={() => compareSolution()}
                 className="px-4 py-2 bg-green-600 hover:bg-green-700 rounded-lg transition text-white text-sm"
@@ -311,7 +331,7 @@ const Home = () => {
         </div>
       </div>
     </div>
-  );
+  )
 };
 
 export default Home;

@@ -53,8 +53,8 @@ export const solutionFour = (iframeDoc: Document, userCode: string) => {
         }
     */
 
-    if (!userCode.includes('.map(')) {
-        return false;
+    if (!userCode.includes('.map()')) {
+      return false;
     }
     
     // Get all h1 elements from the user's solution
