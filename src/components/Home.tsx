@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from 'react';
 import axios from 'axios';
 import * as Babel from '@babel/standalone';
-import Editor from "@monaco-editor/react";
+import Editor, { loader } from "@monaco-editor/react";
 // import { 
 //   solutionOne as validateOne, 
 //   solutionTwo as validateTwo, 
@@ -22,11 +22,31 @@ import {
   User 
 } from "lucide-react";
 import { Link } from 'react-router-dom';
+import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
 import LandingPage from '../Pages/LandingPage';
 
 import { io } from "socket.io-client";
 
 const socket = io("http://localhost:4000");
+
+loader.init().then((monaco) => {
+  monaco.editor.defineTheme("custom-dark", {
+    base: "vs-dark",
+    inherit: true,
+    rules: [
+      { token: "keyword", foreground: "80cbc4" },
+      { token: "string", foreground: "c3e88d" },
+      { token: "number", foreground: "f78c6c" },
+    ],
+    colors: {
+      "editor.background": "#0f172a", // slate-900 background
+      "editorLineNumber.foreground": "#64748b",
+      "editorLineNumber.activeForeground": "#38bdf8", // cyan
+      "editorCursor.foreground": "#38bdf8",
+      "editorIndentGuide.background": "#334155",
+    },
+  });
+});
 
 const Home = () => {
   // to check the solution submitted by the user
@@ -265,71 +285,78 @@ const Home = () => {
         </div>
       </div>
 
-      <div className="grid md:grid-cols-2 grid-cols-1 h-full overflow-hidden">
-        <div className="p-4 overflow-auto bg-gray-900/50">
-          <div className="h-full border rounded-md shadow-inner overflow-hidden">
-            {/* editor for writing the code (monaco editor) */}
-            <Editor
-              onChange={(value) => setCode(value || "")}
-              defaultLanguage="javascript"
-              value={
-                completedQues.some((item: { statement: string }) => item.statement === questions[ques])
-                ? (solutions.find((solution: { statement: string }) => solution.statement === questions[ques])?.solution)
-                : code
-              }
-              theme="vs-dark"
-              height="100%"
-              options={{
-                fontSize: 16,
-                fontFamily: "'Fira Code', monospace",
-                minimap: { enabled: false },
-                lineNumbers: 'on',
-                cursorBlinking: 'expand',
-                smoothScrolling: true,
-                padding: { top: 20 },
-                scrollBeyondLastLine: false,
-                wordWrap: 'on',
-                formatOnType: true,
-                formatOnPaste: true,
-                renderLineHighlight: 'gutter',
-                tabSize: 2,
-                bracketPairColorization: { enabled: true },
-                autoClosingBrackets: 'always',
-                autoClosingQuotes: 'always',
-                quickSuggestions: true,
-                suggestOnTriggerCharacters: true,
-                overviewRulerBorder: false,
-                scrollbar: {
-                  verticalScrollbarSize: 5,
-                  horizontalScrollbarSize: 5,
-                  alwaysConsumeMouseWheel: false,
-                },
-              }}
-            />
-          </div>
-        </div>
-
-        {/* Output */}
-        <div className="p-4 overflow-auto bg-gray-900/50">
-          <div className="relative h-full border rounded-md shadow-inner overflow-hidden flex flex-col">
-            <iframe
-              sandbox="allow-scripts allow-same-origin"
-              srcDoc={html}
-              title="preview"
-              className="flex-1 w-full border-b bg-gray-100"
-            />
-            <div className="p-4 flex justify-between items-center border-t">
-              <span className={`text-sm font-medium text-cyan-500`}>{output}</span>
-              <button
-                onClick={() => compareSolution()}
-                className="px-4 py-2 bg-green-600 hover:bg-green-700 rounded-lg transition text-white text-sm"
-              >
-                Submit
-              </button>
+      <PanelGroup direction="horizontal">
+        {/* Left: Editor */}
+        <Panel defaultSize={50} minSize={25}>
+          <div className="h-full p-2 pr-1 bg-gray-900/50">
+            <div className="h-full border border-cyan-800 rounded-lg shadow-inner overflow-hidden">
+              <Editor
+                onChange={(value) => setCode(value || "")}
+                defaultLanguage="javascript"
+                value={
+                  completedQues.some((item: { statement: string }) => item.statement === questions[ques])
+                    ? solutions.find((solution: { statement: string }) => solution.statement === questions[ques])?.solution
+                    : code
+                }
+                theme="vs-dark"
+                height="100%"
+                options={{
+                  fontSize: 16,
+                  fontFamily: "'Fira Code', monospace",
+                  minimap: { enabled: false },
+                  lineNumbers: "on",
+                  cursorBlinking: "expand",
+                  smoothScrolling: true,
+                  padding: { top: 20 },
+                  scrollBeyondLastLine: false,
+                  wordWrap: "on",
+                  formatOnType: true,
+                  formatOnPaste: true,
+                  renderLineHighlight: "gutter",
+                  tabSize: 2,
+                  bracketPairColorization: { enabled: true },
+                  autoClosingBrackets: "always",
+                  autoClosingQuotes: "always",
+                  quickSuggestions: true,
+                  suggestOnTriggerCharacters: true,
+                  overviewRulerBorder: false,
+                  scrollbar: {
+                    verticalScrollbarSize: 5,
+                    horizontalScrollbarSize: 5,
+                    alwaysConsumeMouseWheel: false,
+                  },
+                }}
+              />
             </div>
           </div>
-        </div>
-      </div>
+        </Panel>
+
+        {/* Draggable divider */}
+        <PanelResizeHandle className="w-1 bg-gray-700 hover:bg-cyan-400 transition-colors cursor-col-resize" />
+
+        {/* Right: Output */}
+        <Panel defaultSize={50} minSize={25}>
+          <div className="h-full p-2 pl-1 bg-gray-900/50">
+            <div className="relative h-full border border-cyan-800 rounded-lg shadow-inner overflow-hidden flex flex-col">
+              <iframe
+                sandbox="allow-scripts allow-same-origin"
+                srcDoc={html}
+                title="preview"
+                className="flex-1 w-full border-b bg-gray-100"
+              />
+              <div className="p-4 flex justify-between items-center border-t border-gray-700">
+                <span className="text-sm font-medium text-cyan-400">{output}</span>
+                <button
+                  onClick={compareSolution}
+                  className="px-4 py-2 bg-green-600 hover:bg-green-700 rounded-lg transition text-white text-sm"
+                >
+                  Submit
+                </button>
+              </div>
+            </div>
+          </div>
+        </Panel>
+      </PanelGroup>
     </div>
   )
 };
