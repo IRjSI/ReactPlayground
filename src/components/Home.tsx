@@ -301,9 +301,10 @@ const Home = () => {
             >
               <span className="text-white font-medium flex items-center justify-between">
                 {index + 1}. {question}
-                <span className='text-green-500'>
-                  <CheckCircle size={16} />
-                </span>
+                
+                {completedQues.some((item: { statement: string }) => item.statement === question) && (
+                  <span className="text-green-500"><CheckCircle size={16} /></span>
+                )}
               </span>
             </div>
           ))}
