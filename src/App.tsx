@@ -3,11 +3,11 @@ import './App.css'
 import Home from './components/Home'
 import LandingPage from './Pages/LandingPage'
 import Login from './Pages/Login'
-import Profile from './Pages/Profile'
+// import Profile from './Pages/Profile'
 import { useContext } from 'react'
 import { AuthContext } from './context/authContext'
 import Signup from './Pages/Signup'
-import AddChallenge from './components/AddChallenge'
+// import AddChallenge from './components/AddChallenge'
 
 function App() {
   //@ts-ignore
@@ -20,8 +20,8 @@ function App() {
         {isLoggedIn ? (
           <>
             <Route path='/home' element={<Home />} />
-            <Route path='/profile' element={<Profile />} />
-            <Route path='/challenge' element={<AddChallenge />} />
+            {/* <Route path='/profile' element={<Profile />} />
+            <Route path='/challenge' element={<AddChallenge />} /> */}
           </>
         ) : null }
         <Route path='/login' element={<Login />} />

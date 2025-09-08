@@ -16,12 +16,13 @@ import Editor, { loader } from "@monaco-editor/react";
 // } from "../challenges/challenges";
 import { AuthContext, AuthContextType } from '../context/authContext';
 import { 
+  CheckCircle,
   ChevronLeft, 
   ChevronRight, 
   LogOutIcon, 
-  User 
+  MenuIcon, 
+  X
 } from "lucide-react";
-import { Link } from 'react-router-dom';
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
 import LandingPage from '../Pages/LandingPage';
 
@@ -66,6 +67,8 @@ const Home = () => {
   const [completedQues, setCompletedQues] = useState([]);
   // to set the existing solutions of the user
   const [solutions, setSolutions] = useState<{ statement: string, solution: string }[]>([]);
+
+  const [questionMap, setQuestionMap] = useState(false)
 
   // set all the questions statements
   const questions = allQues ? allQues.map((ques: { statement: string }) => ques.statement) : []
@@ -238,9 +241,12 @@ const Home = () => {
 
       <div className="flex justify-between items-center p-4 bg-gray-900 text-white shadow-md">
 
-        <Link to={'/profile'} className="border border-cyan-400/50 px-2 py-2 text-white rounded-lg text-sm font-semibold transition-all transform hover:scale-105 duration-300 shadow-lg hover:shadow-cyan-500/30 focus:outline-nonej">
-          <User size={18} />
-        </Link>
+        <button
+          onClick={() => setQuestionMap((prev) => !prev)}
+          className="border border-cyan-400/50 px-2 py-2 text-white rounded-lg text-sm font-semibold transition-all transform hover:scale-105 duration-300 shadow-lg hover:shadow-cyan-500/30 focus:outline-none z-20 backdrop-blur-lg"
+        >
+          {questionMap ? <X size={18} /> : <MenuIcon size={18} />}
+        </button>
         
         <div className="text-xl font-semibold">
           <div className='flex gap-2 justify-center items-center'>
@@ -276,7 +282,7 @@ const Home = () => {
             onClick={() => nextClick()}
             className={`px-2 py-2 ${ques < questions.length-1 ? "bg-blue-600 hover:bg-blue-700" : "bg-blue-500 hover:bg-blue-500"} rounded-lg transition text-sm`}
             disabled = {ques > questions.length - 2}
-            >
+          >
             <ChevronRight size={18} />
           </button>
           <div className='cursor-pointer border border-red-500 bg-red-600/20 px-2 py-2 rounded-lg text-red-500 transition-all transform hover:scale-105 duration-300 shadow-lg hover:shadow-red-500/30 focus:outline-none'>
@@ -284,6 +290,25 @@ const Home = () => {
           </div>
         </div>
       </div>
+
+      {questionMap && (
+        <div className="absolute top-0 left-0 h-full w-1/4 space-y-4 p-4 z-10 rounded-r-xl bg-cyan-800/20 backdrop-blur-lg shadow-lg overflow-y-auto pt-16">
+          {questions.map((question, index) => (
+            <div
+              key={index}
+              className="flex flex-col p-2 rounded-md cursor-pointer hover:bg-cyan-800/30 transition"
+              onClick={() => setQues(index)}
+            >
+              <span className="text-white font-medium flex items-center justify-between">
+                {index + 1}. {question}
+                <span className='text-green-500'>
+                  <CheckCircle size={16} />
+                </span>
+              </span>
+            </div>
+          ))}
+        </div>
+      )}
 
       <PanelGroup direction="horizontal">
         {/* Left: Editor */}
@@ -298,7 +323,7 @@ const Home = () => {
                     ? solutions.find((solution: { statement: string }) => solution.statement === questions[ques])?.solution
                     : code
                 }
-                theme="vs-dark"
+                theme="custom-dark"
                 height="100%"
                 options={{
                   fontSize: 16,
@@ -332,7 +357,7 @@ const Home = () => {
         </Panel>
 
         {/* Draggable divider */}
-        <PanelResizeHandle className="w-1 bg-gray-700 hover:bg-cyan-400 transition-colors cursor-col-resize" />
+        <PanelResizeHandle className="w-1 rounded bg-cyan-900 hover:bg-cyan-400 transition-colors cursor-col-resize" />
 
         {/* Right: Output */}
         <Panel defaultSize={50} minSize={25}>
