@@ -129,24 +129,29 @@ const Home = () => {
 
   async function submitSolution(iframeDoc: any) {
     setOutput("checking...");
-    const res = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/submission/submit`, { iframeDoc });
-    const { solutionId } = res.data;
+    try {
+      const res = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/submission/submit`, { iframeDoc });
+      const { solutionId } = res.data;
 
-    // Register for result
-    socket.emit("register", solutionId);
+      // Register for result
+      socket.emit("register", solutionId);
 
-    socket.on("solutionResult", async (data: any) => {
-      if (data.solutionId === solutionId) {
-        setOutput(data.result == "valid" ? "Correct Solution" : "Incorrect Solution");
-        if (data.result == "valid") {
-          setRefetch(prev => !prev);
-          // save progress -> add the challenge to the User's table
-          await saveProgress();
-          // add solution -> add the solution in the Solution's table
-          await addSolution();
+      socket.on("solutionResult", async (data: any) => {
+        if (data.solutionId === solutionId) {
+          setOutput(data.result == "valid" ? "Correct Solution" : "Incorrect Solution");
+          if (data.result == "valid") {
+            setRefetch(prev => !prev);
+            // save progress -> add the challenge to the User's table
+            await saveProgress();
+            // add solution -> add the solution in the Solution's table
+            await addSolution();
+          }
         }
-      }
-    });
+      });
+    } catch (error) {
+      setOutput("error...")
+      console.log(error)
+    }
   }
 
   // save progress -> add the challenge to the User's table
@@ -371,9 +376,10 @@ const Home = () => {
                 className="flex-1 w-full border-b bg-gray-100"
               />
               <div className="p-4 flex justify-between items-center border-t border-gray-700">
-                <span className="text-sm font-medium text-cyan-400">{output}</span>
+                <span className={`${output === "Correct Solution" ? "text-green-500" : output === "Incorrect Solution" ? "text-red-500" : "text-cyan-400"} text-sm font-medium`}>{output}</span>
                 <button
                   onClick={compareSolution}
+                  disabled={output === "checking..."}
                   className="px-4 py-2 bg-green-600 hover:bg-green-700 rounded-lg transition text-white text-sm"
                 >
                   Submit
