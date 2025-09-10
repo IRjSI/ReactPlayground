@@ -133,6 +133,8 @@ const Home = () => {
       const res = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/submission/submit`, { iframeDoc });
       const { solutionId } = res.data;
 
+      console.log(res)
+
       // Register for result
       socket.emit("register", solutionId);
 
