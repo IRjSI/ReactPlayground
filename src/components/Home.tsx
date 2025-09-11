@@ -28,7 +28,7 @@ import LandingPage from '../Pages/LandingPage';
 
 import { io } from "socket.io-client";
 
-const socket = io("http://localhost:4000");
+const socket = io("https://reactplaygroundbe.onrender.com");
 
 loader.init().then((monaco) => {
   monaco.editor.defineTheme("custom-dark", {
