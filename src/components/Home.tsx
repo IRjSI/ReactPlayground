@@ -290,8 +290,8 @@ const Home = () => {
           >
             <ChevronRight size={18} />
           </button>
-          <div className='cursor-pointer border border-red-500 bg-red-600/20 px-2 py-2 rounded-lg text-red-500 transition-all transform hover:scale-105 duration-300 shadow-lg hover:shadow-red-500/30 focus:outline-none'>
-            <LogOutIcon onClick={logoutClick} size={18} />
+          <div className='cursor-pointer border border-red-500 bg-red-600/20 px-2 py-2 rounded-lg text-red-500 transition-all transform hover:scale-105 duration-300 shadow-lg hover:shadow-red-500/30 focus:outline-none' onClick={logoutClick}>
+            <LogOutIcon size={18} />
           </div>
         </div>
       </div>

@@ -8,6 +8,7 @@ import { useContext } from 'react'
 import { AuthContext } from './context/authContext'
 import Signup from './Pages/Signup'
 import AddChallenge from './components/AddChallenge'
+import AuthSuccess from './components/AuthSuccess'
 
 function App() {
   //@ts-ignore
@@ -24,6 +25,9 @@ function App() {
             <Route path='/challenge' element={<AddChallenge />} />
           </>
         ) : null }
+
+        <Route path="/auth/success" element={<AuthSuccess />} />
+
         <Route path='/login' element={<Login />} />
         <Route path='/signup' element={<Signup />} />
       </Routes>
