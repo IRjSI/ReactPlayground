@@ -134,7 +134,7 @@ const Login = () => {
 
           <div className="text-center text-sm text-gray-400">
             <button
-              onClick={() => window.location.replace("http://localhost:4000/api/auth/google")}
+              onClick={() => window.location.replace(`${import.meta.env.VITE_BACKEND_URL}/auth/google`)}
               className="mt-4 w-full rounded-md bg-violet-600 px-5 py-2 font-semibold text-white transition hover:bg-violet-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 flex justify-center items-center gap-4"
             >
               <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Google_Favicon_2025.svg/960px-Google_Favicon_2025.svg.png" alt="" className='w-12 h-12' />
