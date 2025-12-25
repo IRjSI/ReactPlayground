@@ -28,7 +28,7 @@ import LandingPage from '../Pages/LandingPage';
 
 import { io } from "socket.io-client";
 
-const socket = io("http://localhost:4000");
+const socket = io("https://reactplaygroundbe-production.up.railway.app");
 
 loader.init().then((monaco) => {
   monaco.editor.defineTheme("custom-dark", {
@@ -132,8 +132,6 @@ const Home = () => {
     try {
       const res = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/submission/submit`, { iframeDoc });
       const { solutionId } = res.data;
-
-      console.log(res)
 
       // Register for result
       socket.emit("register", solutionId);
