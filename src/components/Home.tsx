@@ -68,7 +68,7 @@ const Home = () => {
   // to set the existing solutions of the user
   const [solutions, setSolutions] = useState<{ statement: string, solution: string }[]>([]);
 
-  const [questionMap, setQuestionMap] = useState(false)
+  const [questionMap, setQuestionMap] = useState(false);
 
   // set all the questions statements
   const questions = allQues ? allQues.map((ques: { statement: string }) => ques.statement) : []
@@ -112,6 +112,7 @@ const Home = () => {
   // check if the user submitted code is correct or not
   const compareSolution = async () => {
     // get the iframe
+    console.log("reached here...")
     const iframe = document.querySelector("iframe") as HTMLIFrameElement;
     // set the source as html(compiledCode)
     iframe.srcdoc = html;
@@ -129,8 +130,9 @@ const Home = () => {
 
   async function submitSolution(iframeDoc: any) {
     setOutput("checking...");
+    const challengeId = `challenge${ques+1}Validator`;
     try {
-      const res = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/submission/submit`, { iframeDoc });
+      const res = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/submission/submit`, { iframeDoc, challengeId });
       const { solutionId } = res.data;
 
       // Register for result
