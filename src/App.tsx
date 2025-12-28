@@ -5,14 +5,13 @@ import LandingPage from './Pages/LandingPage'
 import Login from './Pages/Login'
 import Profile from './Pages/Profile'
 import { useContext } from 'react'
-import { AuthContext } from './context/authContext'
+import { AuthContext, AuthContextType } from './context/authContext'
 import Signup from './Pages/Signup'
 import AddChallenge from './components/AddChallenge'
 import AuthSuccess from './components/AuthSuccess'
 
 function App() {
-  //@ts-ignore
-  const { isLoggedIn } = useContext(AuthContext);
+  const { isLoggedIn } = useContext(AuthContext) as AuthContextType;
 
   return (
     <div className='bg-[#121212] text-white'>
