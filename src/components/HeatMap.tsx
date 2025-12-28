@@ -1,11 +1,12 @@
-import HeatMap, { IActivity } from "@uiw/react-heat-map";
+import HeatMap from "@uiw/react-heat-map";
 import Tooltip from '@uiw/react-tooltip';
 import { useUser } from "../utils/useUser";
+import { Activity } from "../types/types";
 
 const StreakHeatmap = () => {
     const { userInfo } = useUser();
 
-    const value: IActivity[] = Array.isArray(userInfo?.activity) ? userInfo.activity : [];
+    const value: Activity[] = Array.isArray(userInfo?.activity) ? userInfo.activity : [];
 
   return (
     <div className="p-4 bg-gray-900/40 border border-cyan-400/40 rounded-2xl shadow-lg">

@@ -14,6 +14,13 @@ export type UserProps = {
     };
 }
 
+export type Activity = {
+  _id: string;
+  date: string;
+  active: boolean;
+  count: number;
+}
+
 export type QuestionType = { statement: string };
 export type SolutionType = { statement: string; solution: string };
 
