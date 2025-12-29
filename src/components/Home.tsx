@@ -6,8 +6,8 @@ import { AuthContext, AuthContextType } from '../context/authContext';
 import { 
   CheckCircle,
   ChevronLeft, 
-  ChevronRight, 
-  LogOutIcon, 
+  ChevronRight,
+  Flame,
   MenuIcon,
   X
 } from "lucide-react";
@@ -165,6 +165,21 @@ const Home = () => {
   const prevClick = () => setQues(ques > 0 ? ques - 1 : ques);
   const logoutClick = () => logout();
 
+  // ----------- SHORTCUTS -----------
+
+  // shortcut for ctrl + s to stop browser from interfering
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === "s") {
+        e.preventDefault();
+        e.stopPropagation(); 
+      }
+    }
+
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, []);
+  
   // shortcut for submitting the solution
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
@@ -177,6 +192,20 @@ const Home = () => {
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
   }, []);
+  
+  // shortcut for logging out
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === "l") {
+        const btn = document.getElementById("logout-btn") as HTMLButtonElement;
+        btn?.click();
+      }
+    }
+
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, []);
+
 
   // useEffect to fetch all the challenges nad store in allQues
   useEffect(() => {
@@ -208,7 +237,7 @@ const Home = () => {
   if (!isLoggedIn) return <LandingPage />;
 
   return (
-    <div className="h-screen flex flex-col">
+    <div className="h-screen flex flex-col" id='panel'>
       <Header
         userInfo={userInfo}
         questions={questions}
@@ -265,12 +294,49 @@ function Header({
   <div className="flex justify-between items-center p-4 bg-gray-900 text-white border-b border-cyan-700/40 shadow-lg">
 
     {/* Sidebar toggle */}
-    <button
-      onClick={() => setQuestionMap(prev => !prev)}
-      className="border border-cyan-400/50 px-3 py-2 rounded-lg text-sm font-semibold transition-all hover:bg-cyan-500/20 hover:border-cyan-400 shadow-cyan-500/20 shadow-sm backdrop-blur-lg"
-    >
-      {questionMap ? <X size={18} /> : <MenuIcon size={18} />}
-    </button>
+    <div className='flex items-center justify-center gap-2'>
+
+      <button
+        onClick={() => setQuestionMap(prev => !prev)}
+        className="border border-cyan-400/50 px-3 py-2 rounded-lg text-sm font-semibold transition-all hover:bg-cyan-500/20 hover:border-cyan-400 shadow-cyan-500/20 shadow-sm backdrop-blur-lg"
+        >
+        {questionMap ? <X size={18} /> : <MenuIcon size={18} />}
+      </button>
+
+      <button
+        onClick={prevClick}
+        className={`px-3 py-2 rounded-lg text-sm transition ${
+          ques > 0
+            ? "bg-blue-600 hover:bg-blue-700 shadow-md"
+            : "bg-blue-500 opacity-60 cursor-not-allowed"
+        }`}
+        disabled={ques < 1}
+      >
+        <ChevronLeft size={18} />
+      </button>
+
+      <button
+        onClick={nextClick}
+        className={`px-3 py-2 rounded-lg text-sm transition ${
+          ques < questions.length - 1
+            ? "bg-blue-600 hover:bg-blue-700 shadow-md"
+            : "bg-blue-500 opacity-60 cursor-not-allowed"
+        }`}
+        disabled={ques > questions.length - 2}
+      >
+        <ChevronRight size={18} />
+      </button>
+
+      <Tooltip id="tooltip" />
+        <div
+          data-tooltip-id="tooltip"
+          data-tooltip-content="Logout (Ctrl + L)"
+          id="logout-btn"
+          className='cursor-pointer rounded-lg transition-all transform hover:scale-105 duration-300'
+          onClick={logoutClick}
+        ></div>
+      
+    </div>
 
     {/* Question + status */}
     <div className="text-center">
@@ -297,38 +363,14 @@ function Header({
     </div>
 
     {/* Right Controls */}
-    <div className="flex justify-center items-center gap-2">
+    <div className="flex justify-center items-center gap-4">
 
-      <button
-        onClick={prevClick}
-        className={`px-3 py-2 rounded-lg text-sm transition ${
-          ques > 0
-            ? "bg-blue-600 hover:bg-blue-700 shadow-md"
-            : "bg-blue-500 opacity-60 cursor-not-allowed"
-        }`}
-        disabled={ques < 1}
-      >
-        <ChevronLeft size={18} />
-      </button>
-
-      <button
-        onClick={nextClick}
-        className={`px-3 py-2 rounded-lg text-sm transition ${
-          ques < questions.length - 1
-            ? "bg-blue-600 hover:bg-blue-700 shadow-md"
-            : "bg-blue-500 opacity-60 cursor-not-allowed"
-        }`}
-        disabled={ques > questions.length - 2}
-      >
-        <ChevronRight size={18} />
-      </button>
-
-      <div
-        onClick={logoutClick}
-        className="cursor-pointer border border-red-500 bg-red-600/20 px-2 py-2 rounded-lg text-red-400 transition hover:bg-red-600/30 hover:scale-105 shadow-md shadow-red-500/30"
-      >
-        <LogOutIcon size={18} />
-      </div>
+      <span className="flex items-center gap-1.5 text-orange-400 px-2 py-1 rounded-md border border-orange-400/40 bg-orange-500/10 shadow-sm shadow-orange-500/30">
+        <Flame size={18} className="fill-orange-400" />
+        <span className="font-semibold tracking-wide">
+          {userInfo?.streak?.current || 0}
+        </span>
+      </span>
 
       <Link
         to={"/profile"}
@@ -384,7 +426,7 @@ function EditorPanel({
   ques
 }: EditorPanelProps) {
   return (
-    <Panel defaultSize={50} minSize={25}>
+    <Panel defaultSize={52} minSize={25}>
       <div className="h-full p-2 pr-1 bg-gray-900/50">
         <div className="h-full border border-cyan-800 rounded-lg shadow-inner overflow-hidden">
           <Editor
@@ -432,7 +474,7 @@ function EditorPanel({
 
 function PreviewPanel({ html, output, compareSolution }: PreviewPanelProps) {
   return (
-    <Panel defaultSize={50} minSize={25}>
+    <Panel defaultSize={48} minSize={25}>
       <div className="h-full p-2 pl-1 bg-gray-900/50">
         <div className="relative h-full border border-cyan-800 rounded-lg shadow-inner overflow-hidden flex flex-col">
           <iframe

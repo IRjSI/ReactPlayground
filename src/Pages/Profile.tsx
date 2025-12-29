@@ -4,14 +4,30 @@ import { Link } from "react-router-dom";
 import { AuthContext, AuthContextType } from "../context/authContext";
 import { useUser } from "../utils/useUser";
 import StreakHeatmap from "../components/HeatMap";
+import 'react-tooltip/dist/react-tooltip.css';
+import { Tooltip } from "react-tooltip";
 
 export default function Profile() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const { token } = useContext(AuthContext) as AuthContextType;
+  const { token, logout } = useContext(AuthContext) as AuthContextType;
 
   const { userInfo } = useUser();
+
+  const logoutClick = () => logout();
+
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === "l") {
+        const btn = document.getElementById("logout-btn") as HTMLButtonElement;
+        btn?.click();
+      }
+    }
+
+    window.addEventListener("keydown", handler);
+    return () => window.addEventListener("keydown", handler);
+  }, [])
 
   useEffect(() => {
     if (!token) {
@@ -30,6 +46,7 @@ export default function Profile() {
         <Link to="/home" className="flex items-center gap-2 text-cyan-400 mb-6">
           <ChevronLeft /> Back
         </Link>
+
 
         {loading && (
           <div className="flex justify-center items-center h-[60vh]">
@@ -56,7 +73,15 @@ export default function Profile() {
                 </p>
               </div>
 
-              <div className='cursor-pointer rounded-lg transition-all transform hover:scale-105 duration-300'>
+
+              <Tooltip id="tooltip" />
+              <div
+                data-tooltip-id="tooltip"
+                data-tooltip-content="Logout (Ctrl + L)"
+                id="logout-btn"
+                className='cursor-pointer rounded-lg transition-all transform hover:scale-105 duration-300'
+                onClick={logoutClick}
+              >
                 {userInfo?.avatar ?
                   (
                     <img
@@ -95,6 +120,10 @@ export default function Profile() {
 
             <div className="my-6">
               <StreakHeatmap />
+
+              <span className="text-cyan-700 text-xs">
+                Only accepted solutions are counted as submissions.
+              </span>
             </div>
 
           </>
