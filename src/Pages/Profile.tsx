@@ -79,7 +79,7 @@ export default function Profile() {
                 data-tooltip-id="tooltip"
                 data-tooltip-content="Logout (Ctrl + L)"
                 id="logout-btn"
-                className='cursor-pointer rounded-lg transition-all transform hover:scale-105 duration-300'
+                className='cursor-pointer rounded-lg transition-all transform hover:scale-105 duration-300 flex flex-col items-center justify-center gap-2'
                 onClick={logoutClick}
               >
                 {userInfo?.avatar ?
@@ -97,6 +97,16 @@ export default function Profile() {
                     />
                   )
                 }
+                
+                <div className="flex flex-col items-center justify-center">
+                  <div>
+                    Google linked: <span className={`${userInfo?.provider === "google" ? "text-cyan-400" : "text-red-400"} font-semibold`}>{userInfo?.provider === "google" ? "Yes" : "No"}</span>
+                  </div>
+
+                  <div className="text-cyan-400">
+                    {`(${userInfo?.email})`}
+                  </div>
+                </div>
               </div>
               
             </div>

@@ -2,6 +2,7 @@ export type UserProps = {
     username: string;
     email: string;
     avatar: string;
+    provider: string;
     challenges: string[];
     streak: {
       current: number;
