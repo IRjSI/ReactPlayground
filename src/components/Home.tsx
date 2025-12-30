@@ -161,8 +161,14 @@ const Home = () => {
       { headers: { Authorization: `Bearer ${token}` } }
     );
 
-  const nextClick = () => setQues(ques < questions.length - 1 ? ques + 1 : ques);
-  const prevClick = () => setQues(ques > 0 ? ques - 1 : ques);
+  const nextClick = () => {
+    setQues(ques < questions.length - 1 ? ques + 1 : ques);
+    setOutput('');
+  }
+  const prevClick = () => {
+    setQues(ques > 0 ? ques - 1 : ques);
+    setOutput('');
+  }
   const logoutClick = () => logout();
 
   // ----------- SHORTCUTS -----------

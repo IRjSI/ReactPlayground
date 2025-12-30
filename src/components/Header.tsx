@@ -27,11 +27,6 @@ function Header() {
                   About
                 </Link>
               </li>
-              <li className="list-none">
-                <Link to="/contact" className="text-cyan-100 hover:text-white px-2 lg:px-3 py-2 rounded-full text-sm font-medium transition-colors hover:bg-cyan-500/20">
-                  Contact
-                </Link>
-              </li>
             </div>
             <div className="py-1">
               <Link to={'/login'} className="px-4 lg:px-6 py-2 bg-linear-to-r from-cyan-500 to-cyan-600 hover:from-cyan-400 hover:to-cyan-500 text-white rounded-full text-sm font-semibold transition-all transform hover:scale-105 duration-300 shadow-lg hover:shadow-cyan-500/30 focus:outline-none">
