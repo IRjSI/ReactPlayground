@@ -1,100 +1,123 @@
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import Header from "../components/Header";
 import { Link } from "react-router-dom";
-import { AuthContext } from "../context/authContext";
+import { AuthContext, AuthContextType } from "../context/authContext";
 import Home from "../components/Home";
+import { 
+  Zap, 
+  ArrowRight,
+  Terminal,
+  GitBranch,
+  Sparkles
+} from "lucide-react";
 
 const LandingPage = () => {
-  const [hovered, setHovered] = useState(false);
-
-  //@ts-ignore
-  const { isLoggedIn } = useContext(AuthContext);
-
+  const { isLoggedIn } = useContext(AuthContext) as AuthContextType;
+  
   if (isLoggedIn) return <Home />;
 
   return (
-    <div className="min-h-screen relative overflow-hidden bg-linear-to-br from-gray-900 via-gray-800 to-gray-900 text-white">
-
-      {/* Background Grid Glow */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle,#0ff_1px,transparent_1px)] [bg-size:40px_40px] opacity-20 animate-moveDots" />
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.08)_0%,transparent_60%)]" />
-      <div className="absolute inset-0 bg-cyan-500/5 blur-3xl" />
-
-      {/* Header */}
-      <div className="relative px-6 sm:px-10 md:px-20 lg:px-32 mt-4">
-        <Header />
-      </div>
-
-      {/* HERO SECTION */}
-      <div className="relative z-10 flex flex-col items-center text-center mt-20 md:mt-24 px-6">
-        
-        <div
-          onMouseEnter={() => setHovered(true)}
-          onMouseLeave={() => setHovered(false)}
-          className="flex items-center gap-3 sm:gap-5 transition-all duration-500"
-        >
-          <img
-            src="https://upload.wikimedia.org/wikipedia/commons/1/19/LeetCode_logo_black.png"
-            className={`w-7 sm:w-10 transition-all duration-500 ${hovered ? "opacity-60 -translate-x-1" : "opacity-0"}`}
-          />
-
-          <h1 className="text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight">
-            Practice <span className="text-cyan-400 drop-shadow-[0_0_15px_#22d3ee]">React</span>,
-            <br />
-            Level Up Your Skills
-          </h1>
-
-          <img
-            src="https://cdn4.iconfinder.com/data/icons/logos-3/600/React.js_logo-512.png"
-            className={`w-7 sm:w-10 transition-all duration-500 ${hovered ? "opacity-60 translate-x-1" : "opacity-0"}`}
-          />
+    <div className="min-h-screen bg-linear-to-b from-gray-950 via-gray-900 to-gray-950 text-white">
+      {/* Animated Background */}
+      <div className="fixed inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(6,182,212,0.1),transparent_50%)]" />
+      <div className="fixed inset-0 bg-[radial-gradient(circle,rgba(6,182,212,0.03)_1px,transparent_1px)] [bg-size:50px_50px]" />
+      
+      <div className="relative z-10">
+        {/* Header */}
+        <div className="px-4 sm:px-6 lg:px-8 py-4 max-w-7xl mx-auto">
+          <Header />
         </div>
 
-        <p className="text-gray-300 text-base sm:text-lg max-w-2xl mt-4">
-          Interactive coding playground with automated validation, like LeetCode, but built for React.
-        </p>
+        {/* Hero Section */}
+        <section className="px-4 sm:px-6 lg:px-8 pt-20 pb-16 max-w-7xl mx-auto">
+          <div className="text-center space-y-8">
+            {/* Badge */}
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-cyan-500/10 border border-cyan-500/20 rounded-full text-sm text-cyan-400">
+              <Sparkles size={16} />
+              <span>Practice React like never before</span>
+            </div>
 
-        <Link
-          to="/login"
-          className="mt-6 px-6 sm:px-8 py-3 bg-linear-to-r from-cyan-500 to-cyan-600 hover:from-cyan-400 hover:to-cyan-500 rounded-full text-lg font-semibold transition-all transform hover:scale-[1.04] shadow-lg shadow-cyan-500/30"
-        >
-          Start Solving →
-        </Link>
-      </div>
+            {/* Main Heading */}
+            <div className="space-y-4">
+              <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight">
+                Master React Through
+                <br />
+                <span className="text-transparent bg-clip-text bg-linear-to-r from-cyan-400 via-cyan-300 to-cyan-500">
+                  Hands-On Coding
+                </span>
+              </h1>
+              <p className="text-xl text-gray-400 max-w-2xl mx-auto">
+                Solve React challenges, track your progress, and level up your frontend development skills.
+              </p>
+            </div>
 
-      {/* FEATURE CARDS */}
-      <div className="relative z-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 px-6 sm:px-10 md:px-20 lg:px-32 mt-16 pb-20">
+            {/* CTA Buttons */}
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+              <Link
+                to="/login"
+                className="group inline-flex items-center gap-2 px-8 py-4 bg-cyan-500 hover:bg-cyan-400 rounded-lg text-lg font-semibold transition-all transform hover:scale-105 shadow-lg shadow-cyan-500/25"
+              >
+                <span>Get Started Free</span>
+                <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
+              </Link>
+            </div>
 
-        <FeatureCard
-          title="Learn the Basics"
-          desc="Master JSX, components, props, and hooks through hands-on practice."
-        />
+          </div>
+        </section>
 
-        <FeatureCard
-          title="Real-World Problems"
-          desc="Challenges designed to simulate real frontend engineering scenarios."
-        />
+        {/* How It Works Section */}
+        <section className="px-4 sm:px-6 lg:px-8 py-24 bg-gray-900/50">
+          <div className="max-w-7xl mx-auto">
+            <div className="text-center mb-16">
+              <h2 className="text-4xl font-bold mb-4">How it works</h2>
+              <p className="text-xl text-gray-400">
+                Start solving in three simple steps
+              </p>
+            </div>
 
-        <FeatureCard
-          title="Track Your Progress"
-          desc="Streaks, heatmap, stats and motivation. Stay consistent."
-          center
-        />
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              <StepCard
+                number="01"
+                icon={<Terminal className="text-cyan-400" size={32} />}
+                title="Choose a Challenge"
+                description="Pick from beginner to advanced React challenges covering hooks, state management, and more."
+              />
+              <StepCard
+                number="02"
+                icon={<GitBranch className="text-cyan-400" size={32} />}
+                title="Write Your Solution"
+                description="Code in our interactive editor with syntax highlighting and instant error detection."
+              />
+              <StepCard
+                number="03"
+                icon={<Zap className="text-cyan-400" size={32} />}
+                title="Submit & Learn"
+                description="Get instant feedback, see test results, and learn from the community's solutions."
+              />
+            </div>
+          </div>
+        </section>
+
+        {/* Footer */}
+        <footer className="px-4 sm:px-6 lg:px-8 py-12 border-t border-gray-800 max-w-7xl mx-auto">
+          <div className="text-center text-gray-400">
+            <p>© 2026 React Practice Platform. Built for developers, by developers.</p>
+          </div>
+        </footer>
       </div>
     </div>
   );
 };
 
-function FeatureCard({ title, desc, center }: any) {
+function StepCard({ number, icon, title, description }: any) {
   return (
-    <div
-      className={`border border-cyan-400/40 bg-linear-to-r from-gray-800/60 via-gray-800/10 to-gray-800/60 
-      backdrop-blur-lg rounded-2xl shadow-lg shadow-cyan-500/10 p-6
-      hover:shadow-cyan-500/30 transition-transform duration-300 hover:scale-[1.03]
-      ${center ? "sm:col-span-2 lg:col-span-1 mx-auto" : ""}`}
-    >
-      <h2 className="text-2xl font-bold text-cyan-400 mb-2">{title}</h2>
-      <p className="text-gray-300">{desc}</p>
+    <div className="relative">
+      <div className="text-6xl font-bold text-gray-800 absolute -top-4 -left-2">{number}</div>
+      <div className="relative bg-gray-900/60 border border-gray-800 rounded-xl p-8 hover:border-cyan-500/50 transition-all">
+        <div className="mb-4">{icon}</div>
+        <h3 className="text-2xl font-semibold mb-3 text-white">{title}</h3>
+        <p className="text-gray-400">{description}</p>
+      </div>
     </div>
   );
 }

@@ -1,10 +1,10 @@
 import { useContext, useState } from "react"
 import { Link } from "react-router-dom"
-import { AuthContext } from "../context/authContext"
+import { AuthContext, AuthContextType } from "../context/authContext"
+import { Code2, Menu, X } from "lucide-react"
 
 function Header() {
-  //@ts-ignore
-  const { isLoggedIn } = useContext(AuthContext);
+  const { isLoggedIn } = useContext(AuthContext) as AuthContextType;
   const [menuOpen, setMenuOpen] = useState(false);
 
   const toggleMenu = () => {
@@ -12,70 +12,100 @@ function Header() {
   };
 
   return (
-    <header className="sticky top-0 z-50">
-      <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-8">
-        <div className="border border-cyan-500/30 p-2 backdrop-blur-md bg-cyan-500/5 rounded-full shadow-sm hover:shadow-cyan-500/10 transition-shadow">
-          <div className="hidden md:flex items-center justify-between">
-            <div className="flex gap-4 lg:gap-6 items-center justify-center ml-2 lg:ml-4">
-              <li className="list-none">
-                <Link to="/" className="text-cyan-100 hover:text-white px-2 lg:px-3 py-2 rounded-full text-sm font-medium transition-colors hover:bg-cyan-500/20">
-                  Home
-                </Link>
-              </li> 
-              <li className="list-none">
-                <Link to="/about" className="text-cyan-100 hover:text-white px-2 lg:px-3 py-2 rounded-full text-sm font-medium transition-colors hover:bg-cyan-500/20">
-                  About
-                </Link>
-              </li>
+    <header className="sticky top-0 z-50 backdrop-blur-md bg-gray-950/80 border-b border-gray-800">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-16">
+          {/* Logo */}
+          <Link to="/" className="flex items-center gap-2 group">
+            <div className="p-2 bg-linear-to-br from-cyan-500 to-cyan-600 rounded-lg group-hover:shadow-lg group-hover:shadow-cyan-500/25 transition-all">
+              <Code2 className="text-white" size={20} />
             </div>
-            <div className="py-1">
-              <Link to={'/login'} className="px-4 lg:px-6 py-2 bg-linear-to-r from-cyan-500 to-cyan-600 hover:from-cyan-400 hover:to-cyan-500 text-white rounded-full text-sm font-semibold transition-all transform hover:scale-105 duration-300 shadow-lg hover:shadow-cyan-500/30 focus:outline-none">
-                Login
-              </Link>
-            </div>
-          </div>
+            <span className="text-xl font-bold">
+              <span className="text-white">React</span>
+              <span className="text-cyan-400">Playground</span>
+            </span>
+          </Link>
 
-          <div className="md:hidden">
-            <div className="flex items-center justify-between">
-              <Link to="/" className="text-cyan-100 font-medium text-lg pl-2">
-              <span className="text-white">Learn</span>React
-              </Link>
-              
-              <button 
-                onClick={toggleMenu}
-                className="flex items-center justify-center p-2 rounded-full text-cyan-100 hover:text-white hover:bg-cyan-500/20 focus:outline-none"
+          {/* Desktop Auth Buttons */}
+          <div className="hidden md:flex items-center gap-3">
+            {!isLoggedIn ? (
+              <>
+                <Link
+                  to="/login"
+                  className="px-4 py-2 text-gray-300 hover:text-white text-sm font-medium transition-colors"
+                >
+                  Sign In
+                </Link>
+                <Link
+                  to="/signup"
+                  className="px-6 py-2 bg-cyan-500 hover:bg-cyan-400 text-white rounded-lg text-sm font-semibold transition-all shadow-lg shadow-cyan-500/25 hover:shadow-cyan-500/40"
+                >
+                  Sign Up
+                </Link>
+              </>
+            ) : (
+              <Link
+                to="/profile"
+                className="flex items-center gap-2 px-4 py-2 bg-gray-800 hover:bg-gray-700 border border-gray-700 rounded-lg transition-colors"
               >
-                <span className="sr-only">Open main menu</span>
-                {menuOpen ? (
-                  <svg className="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                ) : (
-                  <svg className="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-                  </svg>
-                )}
-              </button>
-            </div>
-
-            {menuOpen && (
-              <div className="mt-3 pb-2 space-y-1 border-t border-cyan-500/30 pt-2">
-                <div className="pt-2 pb-1">
-                  <Link 
-                    to={'/login'} 
-                    className="block w-full text-center px-6 py-2 bg-linear-to-r from-cyan-500 to-cyan-600 hover:from-cyan-400 hover:to-cyan-500 text-white rounded-full text-sm font-semibold transition-all transform hover:scale-105 duration-300 shadow-lg hover:shadow-cyan-500/30 focus:outline-none"
-                    onClick={() => setMenuOpen(false)}
-                  >
-                    Login
-                  </Link>
+                <div className="w-8 h-8 bg-linear-to-br from-cyan-500 to-cyan-600 rounded-full flex items-center justify-center text-white text-sm font-semibold">
+                  U
                 </div>
-              </div>
+                <span className="text-sm font-medium text-white">Profile</span>
+              </Link>
             )}
           </div>
+
+          {/* Mobile Menu Button */}
+          <button
+            onClick={toggleMenu}
+            className="md:hidden p-2 text-gray-400 hover:text-white hover:bg-gray-800 rounded-lg transition-colors"
+          >
+            {menuOpen ? <X size={24} /> : <Menu size={24} />}
+          </button>
         </div>
+
+        {/* Mobile Menu */}
+        {menuOpen && (
+          <div className="md:hidden border-t border-gray-800 py-4 animate-fadeIn">
+
+            {/* Mobile Auth Buttons */}
+            <div className="space-y-2 px-4 pt-4 border-t border-gray-800">
+              {!isLoggedIn ? (
+                <>
+                  <Link
+                    to="/login"
+                    className="block w-full text-center px-6 py-3 text-gray-300 hover:text-white hover:bg-gray-800 rounded-lg transition-colors font-medium"
+                    onClick={() => setMenuOpen(false)}
+                  >
+                    Sign In
+                  </Link>
+                  <Link
+                    to="/register"
+                    className="block w-full text-center px-6 py-3 bg-cyan-500 hover:bg-cyan-400 text-white rounded-lg font-semibold transition-all shadow-lg shadow-cyan-500/25"
+                    onClick={() => setMenuOpen(false)}
+                  >
+                    Sign Up
+                  </Link>
+                </>
+              ) : (
+                <Link
+                  to="/profile"
+                  className="flex items-center justify-center gap-2 w-full px-6 py-3 bg-gray-800 hover:bg-gray-700 border border-gray-700 rounded-lg transition-colors"
+                  onClick={() => setMenuOpen(false)}
+                >
+                  <div className="w-8 h-8 bg-linear-to-br from-cyan-500 to-cyan-600 rounded-full flex items-center justify-center text-white text-sm font-semibold">
+                    U
+                  </div>
+                  <span className="font-medium text-white">View Profile</span>
+                </Link>
+              )}
+            </div>
+          </div>
+        )}
       </div>
     </header>
-  )
+  );
 }
 
-export default Header
+export default Header;
