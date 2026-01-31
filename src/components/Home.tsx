@@ -20,9 +20,11 @@ import { EditorPanelProps, HeaderProps, PreviewPanelProps, QuestionType, Sidebar
 import 'react-tooltip/dist/react-tooltip.css';
 import { Tooltip } from 'react-tooltip'
 
-const socket = io("https://reactplaygroundbe-production.up.railway.app");
+// const socket = io("https://reactplaygroundbe-production.up.railway.app");
+const socket = io("https://https://rpg-production-5af2.up.railway.app");
+// const socket = io("http://localhost:4000");
 
-/* ---------------- THEME ---------------- */
+
 loader.init().then((monaco) => {
   monaco.editor.defineTheme("custom-dark", {
     base: "vs-dark",
@@ -43,8 +45,6 @@ loader.init().then((monaco) => {
 });
 
 
-
-/* ---------------- MAIN ---------------- */
 const Home = () => {
   // state for code written by the user
   const [code, setCode] = useState(`// React is imported by default.\n// to use hooks, for eg. useState use it like React.useState()\nfunction App() {\n  return <h1>Hello</h1>;\n}`);
@@ -171,8 +171,6 @@ const Home = () => {
   }
   const logoutClick = () => logout();
 
-  // ----------- SHORTCUTS -----------
-
   // shortcut for ctrl + s to stop browser from interfering
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
@@ -293,8 +291,6 @@ const Home = () => {
     </div>
   );
 };
-
-/* ---------------- COMPONENTS ---------------- */
 
 function Header({
   userInfo,
