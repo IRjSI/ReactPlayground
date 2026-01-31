@@ -21,7 +21,7 @@ import 'react-tooltip/dist/react-tooltip.css';
 import { Tooltip } from 'react-tooltip'
 
 // const socket = io("https://reactplaygroundbe-production.up.railway.app");
-const socket = io("https://https://rpg-production-5af2.up.railway.app");
+const socket = io("https://rpg-production-5af2.up.railway.app");
 // const socket = io("http://localhost:4000");
 
 
