@@ -70,7 +70,7 @@ export default function Profile() {
 
         {!loading && !error && (
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-            {/* LEFT SIDEBAR - USER CARD */}
+            {/* left side - user card*/}
             <div className="lg:col-span-4 xl:col-span-3">
               <div className="bg-gray-900/60 backdrop-blur-sm border border-gray-800 rounded-xl shadow-2xl sticky top-8">
                 <Tooltip id="tooltip" className="bg-gray-800 text-cyan-400 border border-cyan-400/30" />
@@ -133,7 +133,7 @@ export default function Profile() {
               </div>
             </div>
 
-            {/* RIGHT CONTENT */}
+            {/* right side */}
             <div className="lg:col-span-8 xl:col-span-9 space-y-6">
               {/* Welcome Banner */}
               <div className="bg-linear-to-r from-cyan-500/10 via-cyan-400/5 to-transparent border border-cyan-400/20 rounded-xl p-8 shadow-xl">

@@ -147,7 +147,7 @@ const Home = () => {
 
   // save progress -> add the challenge to the User's table
   const saveProgress = async () =>
-    axios.post(
+    await axios.post(
       `${import.meta.env.VITE_BACKEND_URL}/challenges/add-challenge`,
       { statement: questions[ques] },
       { headers: { Authorization: `Bearer ${token}` } }
@@ -155,7 +155,7 @@ const Home = () => {
 
   // add solution -> add the solution in the Solution's table
   const addSolution = async () =>
-    axios.post(
+    await axios.post(
       `${import.meta.env.VITE_BACKEND_URL}/solutions/add-solution`,
       { statement: questions[ques], solution: code },
       { headers: { Authorization: `Bearer ${token}` } }
