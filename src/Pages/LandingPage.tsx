@@ -8,7 +8,6 @@ import {
   ArrowRight,
   Terminal,
   GitBranch,
-  Sparkles
 } from "lucide-react";
 
 const LandingPage = () => {
@@ -31,12 +30,6 @@ const LandingPage = () => {
         {/* Hero Section */}
         <section className="px-4 sm:px-6 lg:px-8 pt-20 pb-16 max-w-7xl mx-auto">
           <div className="text-center space-y-8">
-            {/* Badge */}
-            <div className="inline-flex items-center gap-2 px-4 py-2 bg-cyan-500/10 border border-cyan-500/20 rounded-full text-sm text-cyan-400">
-              <Sparkles size={16} />
-              <span>Practice React like never before</span>
-            </div>
-
             {/* Main Heading */}
             <div className="space-y-4">
               <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight">

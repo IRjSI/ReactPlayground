@@ -304,129 +304,170 @@ function Header({
   logoutClick
 }: HeaderProps) {
   return (
-  <div className="flex justify-between items-center p-4 bg-gray-900 text-white border-b border-cyan-700/40 shadow-lg">
+    <div className="flex flex-wrap gap-3 md:gap-0 md:flex-nowrap justify-between items-center p-3 md:p-4 bg-gray-900 text-white border-b border-cyan-700/40 shadow-lg">
 
-    {/* Sidebar toggle */}
-    <div className='flex items-center justify-center gap-2'>
-
-      <button
-        onClick={() => setQuestionMap(prev => !prev)}
-        className="border border-cyan-400/50 px-3 py-2 rounded-lg text-sm font-semibold transition-all hover:bg-cyan-500/20 hover:border-cyan-400 shadow-cyan-500/20 shadow-sm backdrop-blur-lg"
+      {/* LEFT CONTROLS */}
+      <div className="flex items-center gap-2">
+        {/* Sidebar toggle */}
+        <button
+          onClick={() => setQuestionMap(prev => !prev)}
+          className="border border-cyan-400/50 p-2 rounded-lg transition-all hover:bg-cyan-500/20 hover:border-cyan-400 shadow-sm"
         >
-        {questionMap ? <X size={18} /> : <MenuIcon size={18} />}
-      </button>
+          {questionMap ? <X size={18} /> : <MenuIcon size={18} />}
+        </button>
 
-      <button
-        onClick={prevClick}
-        className={`px-3 py-2 rounded-lg text-sm transition ${
-          ques > 0
-            ? "bg-blue-600 hover:bg-blue-700 shadow-md"
-            : "bg-blue-500 opacity-60 cursor-not-allowed"
-        }`}
-        disabled={ques < 1}
-      >
-        <ChevronLeft size={18} />
-      </button>
+        {/* Prev */}
+        <button
+          onClick={prevClick}
+          className={`p-2 rounded-lg transition ${
+            ques > 0
+              ? "bg-blue-600 hover:bg-blue-700 shadow-md"
+              : "bg-blue-500 opacity-60 cursor-not-allowed"
+          }`}
+          disabled={ques < 1}
+        >
+          <ChevronLeft size={18} />
+        </button>
 
-      <button
-        onClick={nextClick}
-        className={`px-3 py-2 rounded-lg text-sm transition ${
-          ques < questions.length - 1
-            ? "bg-blue-600 hover:bg-blue-700 shadow-md"
-            : "bg-blue-500 opacity-60 cursor-not-allowed"
-        }`}
-        disabled={ques > questions.length - 2}
-      >
-        <ChevronRight size={18} />
-      </button>
+        {/* Next */}
+        <button
+          onClick={nextClick}
+          className={`p-2 rounded-lg transition ${
+            ques < questions.length - 1
+              ? "bg-blue-600 hover:bg-blue-700 shadow-md"
+              : "bg-blue-500 opacity-60 cursor-not-allowed"
+          }`}
+          disabled={ques > questions.length - 2}
+        >
+          <ChevronRight size={18} />
+        </button>
 
-      <Tooltip id="tooltip" />
+        {/* Logout */}
         <div
           data-tooltip-id="tooltip"
           data-tooltip-content="Logout (Ctrl + L)"
-          id="logout-btn"
-          className='cursor-pointer rounded-lg transition-all transform hover:scale-105 duration-300'
+          className="cursor-pointer p-2 rounded-lg hover:scale-105 transition"
           onClick={logoutClick}
-        ></div>
-      
-    </div>
-
-    {/* Question + status */}
-    <div className="text-center">
-      <div className="flex gap-2 justify-center items-center text-lg font-semibold">
-        {/* 
-          displaying the challenge
-          questions -> array of statements
-          ques -> 0, 1, 2, ...
-        */}
-        {questions[ques]}
+        >
+        </div>
       </div>
 
-      <div className="mt-1">
-        {completedQues.some(i => i.statement === questions[ques]) ? (
-          <span className="px-2 py-0.5 text-xs rounded-full bg-green-500/20 border border-green-400/40 text-green-400">
-            Solved
-          </span>
-        ) : (
-          <span className="px-2 py-0.5 text-xs rounded-full bg-red-500/20 border border-red-400/40 text-red-400">
-            Unsolved
-          </span>
-        )}
+      {/* CENTER QUESTION */}
+      <div className="flex-1 min-w-50 text-center order-last md:order-0">
+        <div className="text-sm md:text-lg font-semibold truncate px-2">
+          {questions[ques]}
+        </div>
+
+        <div className="mt-1">
+          {completedQues.some(i => i.statement === questions[ques]) ? (
+            <span className="px-2 py-0.5 text-xs rounded-full bg-green-500/20 border border-green-400/40 text-green-400">
+              Solved
+            </span>
+          ) : (
+            <span className="px-2 py-0.5 text-xs rounded-full bg-red-500/20 border border-red-400/40 text-red-400">
+              Unsolved
+            </span>
+          )}
+        </div>
       </div>
-    </div>
 
-    {/* Right Controls */}
-    <div className="flex justify-center items-center gap-4">
-
-      <span className="flex items-center gap-1.5 text-orange-400 px-2 py-1 rounded-md border border-orange-400/40 bg-orange-500/10 shadow-sm shadow-orange-500/30">
-        <Flame size={18} className="fill-orange-400" />
-        <span className="font-semibold tracking-wide">
-          {userInfo?.streak?.current || 0}
+      {/* RIGHT SIDE */}
+      <div className="flex items-center gap-3 ml-auto">
+        {/* Streak */}
+        <span className="flex items-center gap-1.5 text-orange-400 px-2 py-1 rounded-md border border-orange-400/40 bg-orange-500/10 shadow-sm">
+          <Flame size={18} className="fill-orange-400" />
+          <span className="font-semibold">
+            {userInfo?.streak?.current || 0}
+          </span>
         </span>
-      </span>
 
-      <Link
-        to={"/profile"}
-        className="rounded-lg transition transform hover:scale-105"
-      >
-        <img
-          src={userInfo?.avatar}
-          alt="avatar"
-          className="rounded-lg w-10 h-10 object-cover"
-        />
-      </Link>
+        {/* Avatar */}
+        <Link
+          to="/profile"
+          className="rounded-lg hover:scale-105 transition"
+        >
+          <img
+            src={userInfo?.avatar}
+            alt="avatar"
+            className="rounded-lg w-9 h-9 md:w-10 md:h-10 object-cover"
+          />
+        </Link>
+      </div>
     </div>
-  </div>
-);
+  );
 }
 
-function QuestionSidebar({ questionMap, setQuestionMap, questions, completedQues, setQues }: SidebarProps) {
+function QuestionSidebar({
+  questionMap,
+  setQuestionMap,
+  questions,
+  completedQues,
+  setQues
+}: SidebarProps) {
+
   if (!questionMap) return null;
 
   return (
-    <div className="absolute top-0 left-0 h-full w-1/4 space-y-4 p-4 z-10 rounded-r-xl bg-cyan-800/20 backdrop-blur-lg shadow-lg overflow-y-auto pt-16">
-      <button
+    <>
+      {/* Overlay (mobile focus) */}
+      <div
+        className="fixed inset-0 bg-black/40 backdrop-blur-sm z-30 md:hidden"
         onClick={() => setQuestionMap(false)}
-        className="absolute top-4 right-4 border border-cyan-400/50 px-2 py-2 text-white rounded-lg text-sm font-semibold transition-all transform hover:scale-105 duration-300 shadow-lg hover:shadow-cyan-500/30 focus:outline-none"
-      >
-        <X size={18} />
-      </button>
+      />
 
-      {questions.map((q, i) => (
-        <div
-          key={i}
-          className="flex flex-col p-2 rounded-md cursor-pointer hover:bg-cyan-800/30 transition"
-          onClick={() => setQues(i)}
+      {/* Sidebar */}
+      <aside className="
+        fixed top-0 left-0 h-full
+        w-full sm:w-[60%] md:w-[40%] lg:w-1/4
+        bg-cyan-900/30 backdrop-blur-xl
+        shadow-2xl z-40
+        transform transition-transform duration-300
+        rounded-r-xl
+        pt-16
+        overflow-y-auto
+      ">
+        {/* Close button */}
+        <button
+          onClick={() => setQuestionMap(false)}
+          className="absolute top-4 right-4 border border-cyan-400/50 p-2 rounded-lg hover:scale-105 transition shadow-lg hover:shadow-cyan-500/30"
         >
-          <span className="text-white font-medium flex items-center justify-between">
-            {i + 1}. {q}
-            {completedQues.some(x => x.statement === q) && (
-              <span className="text-green-500"><CheckCircle size={16} /></span>
-            )}
-          </span>
+          <X size={18} />
+        </button>
+
+        <div className="space-y-2 px-4 pb-6">
+          {questions.map((q, i) => {
+            const solved = completedQues.some(x => x.statement === q);
+
+            return (
+              <div
+                key={i}
+                onClick={() => {
+                  setQues(i);
+                  setQuestionMap(false); // better mobile UX
+                }}
+                className="
+                  flex items-start gap-2
+                  p-3 rounded-lg cursor-pointer
+                  hover:bg-cyan-800/30
+                  transition
+                "
+              >
+                <span className="text-white font-medium text-sm leading-snug flex-1">
+                  {i + 1}. {q}
+                </span>
+
+                {solved && (
+                  <CheckCircle
+                    size={18}
+                    className="text-green-400 shrink-0 mt-0.5"
+                  />
+                )}
+              </div>
+            );
+          })}
         </div>
-      ))}
-    </div>
+      </aside>
+    </>
   );
 }
 
