@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useMemo, useState } from 'react';
 import axios from 'axios';
 import * as Babel from '@babel/standalone';
 import Editor, { loader } from "@monaco-editor/react";
@@ -16,9 +16,10 @@ import LandingPage from '../Pages/LandingPage';
 import { io } from "socket.io-client";
 import { Link } from 'react-router-dom';
 import { useUser } from '../utils/useUser';
-import { EditorPanelProps, HeaderProps, PreviewPanelProps, QuestionType, SidebarProps, SolutionType } from '../types/types';
+import { EditorPanelProps, HeaderProps, PreviewPanelProps, QuestionType, SidebarProps } from '../types/types';
 import 'react-tooltip/dist/react-tooltip.css';
 import { Tooltip } from 'react-tooltip'
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 
 // const socket = io("https://reactplaygroundbe-production.up.railway.app");
 const socket = io("https://rpg-production-5af2.up.railway.app");
@@ -51,22 +52,71 @@ const Home = () => {
   
   const [output, setOutput] = useState('');
   // to trigger useEffect
-  const [refetch, setRefetch] = useState(false);
+  // const [refetch, setRefetch] = useState(false);
+  /* use tanstack query's mutation instead */
+  const queryClient = useQueryClient();
+
   // number of challenges(for indexing)
   const [ques, setQues] = useState(0);
   // to set all the challenges available in the db
-  const [allQues, setAllQues] = useState<QuestionType[]>([]);
-  // to set the tag: 'solved' or 'unsolved'
-  const [completedQues, setCompletedQues] = useState<QuestionType[]>([]);
-  // to set the existing solutions of the user
-  const [solutions, setSolutions] = useState<SolutionType[]>([]);
+  // const [allQues, setAllQues] = useState<QuestionType[]>([]);
+  // // to set the tag: 'solved' or 'unsolved'
+  // const [completedQues, setCompletedQues] = useState<QuestionType[]>([]);
+  // // to set the existing solutions of the user
+  // const [solutions, setSolutions] = useState<SolutionType[]>([]);
   const [questionMap, setQuestionMap] = useState(false);
+
+  const { token, isLoggedIn, logout } = useContext(AuthContext) as AuthContextType;
+  const { userInfo } = useUser();
+
+
+  
+  const { data: completedQues } = useQuery({
+    queryKey: ['completedChallenges', token],
+    queryFn: async () => {
+      const res = await axios.get(
+        `${import.meta.env.VITE_BACKEND_URL}/challenges/get-user-challenges`,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      return res.data.data.challenges;
+    },
+    enabled: !!token,
+    staleTime: 1000 * 60 * 10,
+  });
+
+  const { data: solutions } = useQuery({
+    queryKey: ['solutions'],
+    queryFn: async () => {
+      const res = await axios.get(
+        `${import.meta.env.VITE_BACKEND_URL}/solutions/get-solutions`,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      return res.data.data.solutions;
+    },
+    enabled: !!token,
+    staleTime: 1000 * 60 * 10,
+  });
+  
+
+  const { data: allQues } = useQuery<QuestionType[]>({
+    queryKey: ['challenges'],
+    queryFn: async () => {
+      const res = await axios.get(
+        `${import.meta.env.VITE_BACKEND_URL}/challenges/get-challenges`,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      return res.data.data;
+    },
+    enabled: !!token,
+    staleTime: 1000 * 60 * 10,
+  });
+
+
   
   // set all the questions statements
   const questions = allQues?.map(q => q.statement) || [];
 
-  const { token, isLoggedIn, logout } = useContext(AuthContext) as AuthContextType;
-  const { userInfo } = useUser();
+
 
   // for showing the preview
   // Generates an HTML document with compiled user code and React runtime
@@ -96,7 +146,7 @@ const Home = () => {
   };
 
   // to store html returned
-  const html = compileCode(code);
+  const html = useMemo(() => compileCode(code), [code]);
 
   // check if the user submitted code is correct or not
   const compareSolution = async () => {
@@ -127,17 +177,24 @@ const Home = () => {
       // Register for result
       socket.emit("register", solutionId);
 
-      socket.on("solutionResult", async (data: any) => {
+      socket.once("solutionResult", async (data: any) => {
         if (data.solutionId !== solutionId) return;
 
         setOutput(data.result === "valid" ? "Correct Solution" : "Incorrect Solution");
 
         if (data.result === "valid") {
-          setRefetch(p => !p);
           // save progress -> add the challenge to the User's table
           await saveProgress();
           // add solution -> add the solution in the Solution's table
           await addSolution();
+
+          queryClient.invalidateQueries({
+            queryKey: ['completedChallenges', token]
+          });
+
+          queryClient.invalidateQueries({
+            queryKey: ['solutions', token]
+          });
         }
       });
     } catch {
@@ -211,32 +268,34 @@ const Home = () => {
   }, []);
 
 
-  // useEffect to fetch all the challenges nad store in allQues
-  useEffect(() => {
-    if (!token) return;
-    axios
-      .get(`${import.meta.env.VITE_BACKEND_URL}/challenges/get-challenges`, {
-        headers: { Authorization: `Bearer ${token}` },
-      })
-      .then(res => setAllQues(res.data.data));
-  }, [token, refetch]);
+  // useEffect to fetch all the challenges and store in allQues
+  // useEffect(() => {
+  //   if (!token) return;
+  //   axios
+  //     .get(`${import.meta.env.VITE_BACKEND_URL}/challenges/get-challenges`, {
+  //       headers: { Authorization: `Bearer ${token}` },
+  //     })
+  //     .then(res => setAllQues(res.data.data));
+  // }, [token, refetch]);
+
+  
 
   // useEffect to fetch all the user's completed challenges and solutions
-  useEffect(() => {
-    if (!token) return;
+  // useEffect(() => {
+  //   if (!token) return;
 
-    axios
-      .get(`${import.meta.env.VITE_BACKEND_URL}/challenges/get-user-challenges`, {
-        headers: { Authorization: `Bearer ${token}` },
-      })
-      .then(res => setCompletedQues(res.data.data.challenges));
+  //   axios
+  //     .get(`${import.meta.env.VITE_BACKEND_URL}/challenges/get-user-challenges`, {
+  //       headers: { Authorization: `Bearer ${token}` },
+  //     })
+  //     .then(res => setCompletedQues(res.data.data.challenges));
 
-    axios
-      .get(`${import.meta.env.VITE_BACKEND_URL}/solutions/get-solutions`, {
-        headers: { Authorization: `Bearer ${token}` },
-      })
-      .then(res => setSolutions(res.data.data.solutions));
-  }, [token, ques]);
+  //   axios
+  //     .get(`${import.meta.env.VITE_BACKEND_URL}/solutions/get-solutions`, {
+  //       headers: { Authorization: `Bearer ${token}` },
+  //     })
+  //     .then(res => setSolutions(res.data.data.solutions));
+  // }, [token, ques]);
 
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
