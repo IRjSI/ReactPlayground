@@ -20,7 +20,7 @@ import { EditorPanel } from './EditorPanel';
 import { PreviewPanel } from './PreviewPanel';
 
 // const socket = io("https://reactplaygroundbe-production.up.railway.app");
-const socket = io("http://ec2-13-203-34-125.ap-south-1.compute.amazonaws.com");
+const socket = io("https://rpg-proxy.onrender.com");
 // const socket = io("http://localhost:4000");
 
 loader.init().then((monaco) => {
