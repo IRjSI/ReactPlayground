@@ -20,8 +20,9 @@ import { EditorPanel } from './EditorPanel';
 import { PreviewPanel } from './PreviewPanel';
 
 // const socket = io("https://reactplaygroundbe-production.up.railway.app");
-const socket = io("https://rpg-production-5af2.up.railway.app");
+// const socket = io("https://rpg-production-5af2.up.railway.app");
 // const socket = io("http://localhost:4000");
+const socket = io("https://rpg-proxy.onrender.com");
 
 loader.init().then((monaco) => {
   monaco.editor.defineTheme("custom-dark", {
@@ -59,7 +60,7 @@ const Home = () => {
   const { token, isLoggedIn, logout } = useContext(AuthContext) as AuthContextType;
   const { userInfo } = useUser();
   
-  const { data: completedQues } = useQuery({
+  const { data: completedQues = []} = useQuery({
     queryKey: ['completedChallenges', token],
     queryFn: async () => {
       const res = await axios.get(
@@ -72,8 +73,10 @@ const Home = () => {
     staleTime: 1000 * 60 * 10,
   });
 
-  const { data: solutions } = useQuery({
-    queryKey: ['solutions'],
+  console.log("completedQues", completedQues)
+  
+  const { data: solutions = []} = useQuery({
+    queryKey: ['solutions', token],
     queryFn: async () => {
       const res = await axios.get(
         `${import.meta.env.VITE_BACKEND_URL}/solutions/get-solutions`,
@@ -84,9 +87,10 @@ const Home = () => {
     enabled: !!token,
     staleTime: 1000 * 60 * 10,
   });
+  console.log("solutions", solutions)
   
-  const { data: allQues } = useQuery<QuestionType[]>({
-    queryKey: ['challenges'],
+  const { data: allQues = []} = useQuery<QuestionType[]>({
+    queryKey: ['challenges', token],
     queryFn: async () => {
       const res = await axios.get(
         `${import.meta.env.VITE_BACKEND_URL}/challenges/get-challenges`,
@@ -97,6 +101,7 @@ const Home = () => {
     enabled: !!token,
     staleTime: 1000 * 60 * 10,
   });
+  console.log("allQues", allQues)
 
   // set all the questions statements
   const questions = allQues?.map(q => q.statement) || [];
