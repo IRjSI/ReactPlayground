@@ -20,11 +20,7 @@ import { EditorPanel } from './EditorPanel';
 import { PreviewPanel } from './PreviewPanel';
 
 // const socket = io("https://reactplaygroundbe-production.up.railway.app");
-<<<<<<< HEAD
 // const socket = io("https://rpg-production-5af2.up.railway.app");
-=======
-const socket = io("https://rpg-proxy.onrender.com");
->>>>>>> e862a557c0bb51451f4c2cfc3a4d78379436973b
 // const socket = io("http://localhost:4000");
 const socket = io("https://rpg-proxy.onrender.com");
 
