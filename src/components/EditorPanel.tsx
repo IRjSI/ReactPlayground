@@ -8,7 +8,6 @@ export function EditorPanel({
   code,
   setCode,
   solutions,
-  completedQues,
   questions,
   ques
 }: EditorPanelProps) {
@@ -20,9 +19,17 @@ export function EditorPanel({
             onChange={(v) => setCode(v || "")}
             defaultLanguage="javascript"
             value={
-              completedQues.some(i => i.statement === questions[ques])
-                ? solutions.find(s => s.statement === questions[ques])?.solution
-                : code
+              (() => {
+                const currentQ = questions[ques];
+
+                if (!currentQ?.solved) return code;
+
+                const existing = solutions.find(
+                  s => s.challenge === currentQ._id
+                );
+
+                return existing?.solution || code;
+              })()
             }
             theme="custom-dark"
             height="100%"

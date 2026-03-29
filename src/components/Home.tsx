@@ -19,10 +19,8 @@ import { QuestionSidebar } from './QuestionSidebar';
 import { EditorPanel } from './EditorPanel';
 import { PreviewPanel } from './PreviewPanel';
 
-// const socket = io("https://reactplaygroundbe-production.up.railway.app");
-// const socket = io("https://rpg-production-5af2.up.railway.app");
-// const socket = io("http://localhost:4000");
-const socket = io("https://rpg-proxy.onrender.com");
+const socket = io("http://localhost:4000");
+// const socket = io("https://rpg-proxy.onrender.com");
 
 loader.init().then((monaco) => {
   monaco.editor.defineTheme("custom-dark", {
@@ -60,21 +58,6 @@ const Home = () => {
   const { token, isLoggedIn, logout } = useContext(AuthContext) as AuthContextType;
   const { userInfo } = useUser();
   
-  const { data: completedQues = []} = useQuery({
-    queryKey: ['completedChallenges', token],
-    queryFn: async () => {
-      const res = await axios.get(
-        `${import.meta.env.VITE_BACKEND_URL}/challenges/get-user-challenges`,
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-      return res.data.data.challenges;
-    },
-    enabled: !!token,
-    staleTime: 1000 * 60 * 10,
-  });
-
-  console.log("completedQues", completedQues)
-  
   const { data: solutions = []} = useQuery({
     queryKey: ['solutions', token],
     queryFn: async () => {
@@ -82,12 +65,11 @@ const Home = () => {
         `${import.meta.env.VITE_BACKEND_URL}/solutions/get-solutions`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      return res.data.data.solutions;
+      return res.data.data;
     },
     enabled: !!token,
     staleTime: 1000 * 60 * 10,
   });
-  console.log("solutions", solutions)
   
   const { data: allQues = []} = useQuery<QuestionType[]>({
     queryKey: ['challenges', token],
@@ -101,10 +83,10 @@ const Home = () => {
     enabled: !!token,
     staleTime: 1000 * 60 * 10,
   });
-  console.log("allQues", allQues)
 
   // set all the questions statements
-  const questions = allQues?.map(q => q.statement) || [];
+  // const questions = allQues?.map(q => q.statement) || [];
+  const questions = allQues;
 
   // for showing the preview
   // Generates an HTML document with compiled user code and React runtime
@@ -171,14 +153,8 @@ const Home = () => {
         setOutput(data.result === "valid" ? "Correct Solution" : "Incorrect Solution");
 
         if (data.result === "valid") {
-          // save progress -> add the challenge to the User's table
-          await saveProgress();
           // add solution -> add the solution in the Solution's table
           await addSolution();
-
-          queryClient.invalidateQueries({
-            queryKey: ['completedChallenges', token]
-          });
 
           queryClient.invalidateQueries({
             queryKey: ['solutions', token]
@@ -190,19 +166,11 @@ const Home = () => {
     }
   }
 
-  // save progress -> add the challenge to the User's table
-  const saveProgress = async () =>
-    await axios.post(
-      `${import.meta.env.VITE_BACKEND_URL}/challenges/add-challenge`,
-      { statement: questions[ques] },
-      { headers: { Authorization: `Bearer ${token}` } }
-    );
-
   // add solution -> add the solution in the Solution's table
   const addSolution = async () =>
     await axios.post(
       `${import.meta.env.VITE_BACKEND_URL}/solutions/add-solution`,
-      { statement: questions[ques], solution: code },
+      { challegeId: questions[ques]._id, solution: code },
       { headers: { Authorization: `Bearer ${token}` } }
     );
 
@@ -275,7 +243,6 @@ const Home = () => {
         questions={questions}
         ques={ques}
         setQues={setQues}
-        completedQues={completedQues}
         questionMap={questionMap}
         setQuestionMap={setQuestionMap}
         logoutClick={logoutClick}
@@ -287,7 +254,6 @@ const Home = () => {
         questionMap={questionMap}
         setQuestionMap={setQuestionMap}
         questions={questions}
-        completedQues={completedQues}
         setQues={setQues}
       />
 
@@ -297,7 +263,6 @@ const Home = () => {
           setCode={setCode}
           questions={questions}
           ques={ques}
-          completedQues={completedQues}
           solutions={solutions}
         />
 

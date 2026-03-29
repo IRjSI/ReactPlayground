@@ -16,7 +16,6 @@ export function Header({
   ques,
   setQuestionMap,
   questionMap,
-  completedQues,
   nextClick,
   prevClick,
   logoutClick
@@ -73,11 +72,11 @@ export function Header({
       {/* CENTER QUESTION */}
       <div className="flex-1 min-w-50 text-center order-last md:order-0">
         <div className="text-sm md:text-lg font-semibold truncate px-2">
-          {questions[ques]}
+          {questions[ques]?.statement}
         </div>
 
         <div className="mt-1">
-          {completedQues.some(i => i.statement === questions[ques]) ? (
+          {questions[ques]?.solved ? (
             <span className="px-2 py-0.5 text-xs rounded-full bg-green-500/20 border border-green-400/40 text-green-400">
               Solved
             </span>

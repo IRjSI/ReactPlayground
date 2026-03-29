@@ -22,15 +22,24 @@ export type Activity = {
   count: number;
 }
 
-export type QuestionType = { statement: string };
-export type SolutionType = { statement: string; solution: string };
+// export type QuestionType = { statement: string };
+export type QuestionType = {
+  _id: string;
+  statement: string;
+  solved: boolean;
+};
+export type SolutionType = {
+  challenge: string;
+  statement: string;
+  solution: string;
+};
 
 export type HeaderProps = {
   userInfo: any;
-  questions: string[];
+  questions: QuestionType[];
   ques: number;
   setQues: React.Dispatch<React.SetStateAction<number>>;
-  completedQues: QuestionType[];
+  completedQues?: QuestionType[];
   questionMap: boolean;
   setQuestionMap: React.Dispatch<React.SetStateAction<boolean>>;
   logoutClick: () => void;
@@ -40,24 +49,24 @@ export type HeaderProps = {
 
 export type SidebarProps = {
   questionMap: boolean;
-  questions: string[];
-  completedQues: QuestionType[];
+  questions: QuestionType[];
+  completedQues?: QuestionType[];
   setQues: React.Dispatch<React.SetStateAction<number>>;
   setQuestionMap: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 export type QuestionSidebarProps = {
-  questions: string[];
-  completedQues: { statement: string }[];
+  questions: QuestionType[];
+  completedQues?: { statement: string }[];
   setQues: React.Dispatch<React.SetStateAction<number>>;
 };
 
 export type EditorPanelProps = {
   code: string;
   setCode: React.Dispatch<React.SetStateAction<string>>;
-  questions: string[];
+  questions: QuestionType[];
   ques: number;
-  completedQues: QuestionType[];
+  completedQues?: QuestionType[];
   solutions: SolutionType[];
 };
 

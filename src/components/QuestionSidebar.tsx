@@ -7,7 +7,6 @@ export function QuestionSidebar({
   questionMap,
   setQuestionMap,
   questions,
-  completedQues,
   setQues
 }: SidebarProps) {
 
@@ -42,11 +41,11 @@ export function QuestionSidebar({
 
         <div className="space-y-2 px-4 pb-6">
           {questions.map((q, i) => {
-            const solved = completedQues.some(x => x.statement === q);
+            const solved = q.solved;
 
             return (
               <div
-                key={i}
+                key={q._id}
                 onClick={() => {
                   setQues(i);
                   setQuestionMap(false); // better mobile UX
@@ -59,7 +58,7 @@ export function QuestionSidebar({
                 "
               >
                 <span className="text-white font-medium text-sm leading-snug flex-1">
-                  {i + 1}. {q}
+                  {i + 1}. {q.statement}
                 </span>
 
                 {solved && (
