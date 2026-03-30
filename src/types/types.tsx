@@ -1,26 +1,22 @@
 export type UserProps = {
+  user: {
     username: string;
     email: string;
     avatar: string;
     provider: string;
-    challenges: string[];
     streak: {
       current: number;
       longest: number;
     };
-    activity: {
-      date: string;
-      active: boolean;
-      count: number;
-    };
+  };
+  userActivity: any;
+  noOfChallenges: any;
 }
 
 export type Activity = {
-  _id: string;
   date: string;
-  active: boolean;
   count: number;
-}
+};
 
 // export type QuestionType = { statement: string };
 export type QuestionType = {
@@ -28,6 +24,7 @@ export type QuestionType = {
   statement: string;
   solved: boolean;
 };
+
 export type SolutionType = {
   challenge: string;
   statement: string;

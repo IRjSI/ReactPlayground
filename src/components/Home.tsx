@@ -159,6 +159,10 @@ const Home = () => {
           queryClient.invalidateQueries({
             queryKey: ['solutions', token]
           });
+
+          queryClient.invalidateQueries({
+            queryKey: ['challenges', token]
+          });
         }
       });
     } catch {
@@ -167,12 +171,13 @@ const Home = () => {
   }
 
   // add solution -> add the solution in the Solution's table
-  const addSolution = async () =>
+  const addSolution = async () => {
     await axios.post(
       `${import.meta.env.VITE_BACKEND_URL}/solutions/add-solution`,
-      { challegeId: questions[ques]._id, solution: code },
+      { challengeId: questions[ques]._id, solution: code },
       { headers: { Authorization: `Bearer ${token}` } }
     );
+  }
 
   const nextClick = () => {
     setQues(ques < questions.length - 1 ? ques + 1 : ques);
@@ -183,6 +188,21 @@ const Home = () => {
     setOutput('');
   }
   const logoutClick = () => logout();
+
+  useEffect(() => {
+    const currentQ = questions[ques];
+    if (!currentQ) return;
+
+    const existing = solutions.find(
+      (s: any) => s.challenge.toString() === currentQ._id.toString()
+    );
+
+    if (existing) {
+      setCode(existing.solution);
+    } else {
+      setCode(`// React is imported by default.\n// to use hooks, for eg. useState use it like React.useState()\nfunction App() {\n  return <h1>Hello</h1>;\n}`);
+    }
+  }, [ques, questions, solutions]);
 
   // shortcut for ctrl + s to stop browser from interfering
   useEffect(() => {

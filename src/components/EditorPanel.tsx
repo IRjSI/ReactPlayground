@@ -7,10 +7,8 @@ import { EditorPanelProps } from '../types/types';
 export function EditorPanel({
   code,
   setCode,
-  solutions,
-  questions,
-  ques
 }: EditorPanelProps) {
+
   return (
     <Panel defaultSize={52} minSize={25}>
       <div className="h-full p-2 pr-1 bg-gray-900/50">
@@ -18,19 +16,7 @@ export function EditorPanel({
           <Editor
             onChange={(v) => setCode(v || "")}
             defaultLanguage="javascript"
-            value={
-              (() => {
-                const currentQ = questions[ques];
-
-                if (!currentQ?.solved) return code;
-
-                const existing = solutions.find(
-                  s => s.challenge === currentQ._id
-                );
-
-                return existing?.solution || code;
-              })()
-            }
+            value={code}
             theme="custom-dark"
             height="100%"
             options={{
