@@ -5,18 +5,20 @@ import LandingPage from './Pages/LandingPage'
 import Login from './Pages/Login'
 import Profile from './Pages/Profile'
 import { useContext } from 'react'
-import { AuthContext } from './context/authContext'
+import { AuthContext, AuthContextType } from './context/authContext'
 import Signup from './Pages/Signup'
 import AddChallenge from './components/AddChallenge'
+import AuthSuccess from './components/AuthSuccess'
+import About from './Pages/About'
 
 function App() {
-  //@ts-ignore
-  const { isLoggedIn } = useContext(AuthContext);
+  const { isLoggedIn } = useContext(AuthContext) as AuthContextType;
 
   return (
     <div className='bg-[#121212] text-white'>
       <Routes>
         <Route path='/' element={<LandingPage />} />
+        <Route path='/About' element={<About />} />
         {isLoggedIn ? (
           <>
             <Route path='/home' element={<Home />} />
@@ -24,6 +26,9 @@ function App() {
             <Route path='/challenge' element={<AddChallenge />} />
           </>
         ) : null }
+
+        <Route path="/auth/success" element={<AuthSuccess />} />
+
         <Route path='/login' element={<Login />} />
         <Route path='/signup' element={<Signup />} />
       </Routes>
