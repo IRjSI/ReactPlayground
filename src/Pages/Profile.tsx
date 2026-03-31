@@ -87,8 +87,8 @@ export default function Profile() {
                     <div className="relative w-24 h-24 mx-auto mb-4">
                       <img
                         src={
-                          userInfo?.avatar
-                            ? userInfo.avatar
+                          userInfo?.user.avatar
+                            ? userInfo.user.avatar
                             : "https://hauntedjukebox.com/wp-content/uploads/2024/08/stalker.jpg"
                         }
                         alt="avatar"
@@ -99,7 +99,7 @@ export default function Profile() {
 
                     <div className="text-center">
                       <h1 className="text-2xl font-bold text-white mb-1 group-hover:text-cyan-400 transition-colors">
-                        {userInfo?.username || "Guest"}
+                        {userInfo?.user.username || "Guest"}
                       </h1>
                       <p className="text-sm text-gray-400 group-hover:text-gray-300 transition-colors">
                         Click to logout
@@ -113,7 +113,7 @@ export default function Profile() {
                   <div className="flex items-center justify-between py-3 px-4 bg-gray-800/50 rounded-lg">
                     <span className="text-sm text-gray-400">Email</span>
                     <span className="text-sm text-cyan-400 font-medium truncate ml-2">
-                      {userInfo?.email || "N/A"}
+                      {userInfo?.user.email || "N/A"}
                     </span>
                   </div>
 
@@ -121,12 +121,12 @@ export default function Profile() {
                     <span className="text-sm text-gray-400">Google</span>
                     <span
                       className={`text-sm font-semibold ${
-                        userInfo?.provider === "google"
+                        userInfo?.user.provider === "google"
                           ? "text-green-400"
                           : "text-gray-500"
                       }`}
                     >
-                      {userInfo?.provider === "google" ? "Connected" : "Not linked"}
+                      {userInfo?.user.provider === "google" ? "Connected" : "Not linked"}
                     </span>
                   </div>
                 </div>
@@ -142,7 +142,7 @@ export default function Profile() {
                     <h1 className="text-3xl sm:text-4xl font-bold mb-2">
                       Welcome back,{" "}
                       <span className="text-transparent bg-clip-text bg-linear-to-r from-cyan-400 to-cyan-300">
-                        {userInfo?.username || "Guest"}
+                        {userInfo?.user.username || "Guest"}
                       </span>
                     </h1>
                     <p className="text-gray-400">
@@ -156,14 +156,14 @@ export default function Profile() {
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <StatCard
                   title="Challenges Completed"
-                  value={userInfo?.challenges?.length || 0}
+                  value={userInfo?.noOfChallenges || 0}
                   icon={<Target className="text-cyan-400" size={24} />}
                   trend="Total solved"
                 />
 
                 <StatCard
                   title="Current Streak"
-                  value={userInfo?.streak?.current || 0}
+                  value={userInfo?.user?.streak?.current || 0}
                   icon={<Flame className="text-orange-400" size={24} />}
                   trend="days in a row"
                   highlight
@@ -171,7 +171,7 @@ export default function Profile() {
 
                 <StatCard
                   title="Longest Streak"
-                  value={userInfo?.streak?.longest || 0}
+                  value={userInfo?.user?.streak?.longest || 0}
                   icon={<Trophy className="text-yellow-400" size={24} />}
                   trend="days record"
                 />
@@ -206,19 +206,19 @@ export default function Profile() {
                     <div className="flex justify-between items-center">
                       <span className="text-sm text-gray-400">Account Type</span>
                       <span className="text-sm font-medium text-cyan-400">
-                        {userInfo?.provider === "google" ? "Google" : "Standard"}
+                        {userInfo?.user.provider === "google" ? "Google" : "Standard"}
                       </span>
                     </div>
                     <div className="flex justify-between items-center">
                       <span className="text-sm text-gray-400">Total Progress</span>
                       <span className="text-sm font-medium text-white">
-                        {userInfo?.challenges?.length || 0} challenges
+                        {userInfo?.noOfChallenges || 0} challenges
                       </span>
                     </div>
                     <div className="flex justify-between items-center">
                       <span className="text-sm text-gray-400">Streak Status</span>
                       <span className="text-sm font-medium text-orange-400">
-                        {(userInfo?.streak?.current || 0) > 0 ? "Active 🔥" : "Start today!"}
+                        {(userInfo?.user?.streak?.current || 0) > 0 ? "Active 🔥" : "Start today!"}
                       </span>
                     </div>
                   </div>

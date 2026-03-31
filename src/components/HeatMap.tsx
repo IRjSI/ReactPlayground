@@ -1,12 +1,21 @@
 import HeatMap from "@uiw/react-heat-map";
-import Tooltip from '@uiw/react-tooltip';
+import Tooltip from "@uiw/react-tooltip";
 import { useUser } from "../utils/useUser";
 import { Activity } from "../types/types";
 
 const StreakHeatmap = () => {
   const { userInfo } = useUser();
 
-  const value: Activity[] = Array.isArray(userInfo?.activity) ? userInfo.activity : [];
+  console.log(userInfo?.userActivity)
+
+  const value: Activity[] = Array.isArray(userInfo?.userActivity)
+    ? userInfo.userActivity.map((d: any) => ({
+        date: new Date(d.date).toLocaleDateString("en-CA"),
+        count: d.count || 0,
+      }))
+    : [];
+
+  console.log(value)
 
   const today = new Date();
   const oneYearAgo = new Date();
@@ -18,7 +27,7 @@ const StreakHeatmap = () => {
         Activity Streak
       </h2>
 
-      <div className="flex justify-center">
+      <div className="flex justify-center overflow-x-auto">
         <HeatMap
           value={value}
           startDate={oneYearAgo}
@@ -27,7 +36,7 @@ const StreakHeatmap = () => {
           rectRender={(props, data) => (
             <Tooltip
               placement="top"
-              content={`submissions: ${data?.count ? data.count + 1 : 0}`}
+              content={`submissions: ${data?.count || 0}`}
             >
               <rect
                 {...props}
@@ -50,7 +59,7 @@ const StreakHeatmap = () => {
             6: "#38e6f5",
             7: "#67e8f9",
             8: "#a5f3fc",
-            9: "#cffafe"
+            9: "#cffafe",
           }}
           style={{
             color: "#67e8f9",
@@ -58,6 +67,12 @@ const StreakHeatmap = () => {
           } as React.CSSProperties}
         />
       </div>
+
+      {value.length === 0 && (
+        <p className="text-gray-500 text-sm mt-4 text-center">
+          No activity yet. Start solving challenges!
+        </p>
+      )}
     </div>
   );
 };

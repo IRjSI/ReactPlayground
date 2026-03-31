@@ -16,7 +16,6 @@ export function Header({
   ques,
   setQuestionMap,
   questionMap,
-  completedQues,
   nextClick,
   prevClick,
   logoutClick
@@ -73,11 +72,11 @@ export function Header({
       {/* CENTER QUESTION */}
       <div className="flex-1 min-w-50 text-center order-last md:order-0">
         <div className="text-sm md:text-lg font-semibold truncate px-2">
-          {questions[ques]}
+          {questions[ques]?.statement}
         </div>
 
         <div className="mt-1">
-          {completedQues.some(i => i.statement === questions[ques]) ? (
+          {questions[ques]?.solved ? (
             <span className="px-2 py-0.5 text-xs rounded-full bg-green-500/20 border border-green-400/40 text-green-400">
               Solved
             </span>
@@ -95,7 +94,7 @@ export function Header({
         <span className="flex items-center gap-1.5 text-orange-400 px-2 py-1 rounded-md border border-orange-400/40 bg-orange-500/10 shadow-sm">
           <Flame size={18} className="fill-orange-400" />
           <span className="font-semibold">
-            {userInfo?.streak?.current || 0}
+            {userInfo?.user?.streak?.current || 0}
           </span>
         </span>
 
@@ -105,7 +104,7 @@ export function Header({
           className="rounded-lg hover:scale-105 transition"
         >
           <img
-            src={userInfo?.avatar}
+            src={userInfo?.user.avatar}
             alt="avatar"
             className="rounded-lg w-9 h-9 md:w-10 md:h-10 object-cover"
           />
