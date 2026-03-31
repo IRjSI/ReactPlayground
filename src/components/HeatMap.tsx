@@ -5,17 +5,13 @@ import { Activity } from "../types/types";
 
 const StreakHeatmap = () => {
   const { userInfo } = useUser();
-
-  console.log(userInfo?.userActivity)
-
+  
   const value: Activity[] = Array.isArray(userInfo?.userActivity)
     ? userInfo.userActivity.map((d: any) => ({
         date: new Date(d.date).toLocaleDateString("en-CA"),
         count: d.count || 0,
       }))
     : [];
-
-  console.log(value)
 
   const today = new Date();
   const oneYearAgo = new Date();
