@@ -19,8 +19,8 @@ import { QuestionSidebar } from './QuestionSidebar';
 import { EditorPanel } from './EditorPanel';
 import { PreviewPanel } from './PreviewPanel';
 
-const socket = io("http://localhost:4000");
-// const socket = io("https://rpg-proxy.onrender.com");
+// const socket = io("http://localhost:4000");
+const socket = io("https://rpg-proxy.onrender.com");
 
 loader.init().then((monaco) => {
   monaco.editor.defineTheme("custom-dark", {
