@@ -4,12 +4,13 @@ import { Tooltip } from 'react-tooltip'
 /* Type */
 import { PreviewPanelProps } from '../types/types';
 
-export function PreviewPanel({ html, output, compareSolution }: PreviewPanelProps) {
+export function PreviewPanel({ html, output, compareSolution, iframeRef }: PreviewPanelProps) {
   return (
     <Panel defaultSize={48} minSize={25}>
       <div className="h-full p-2 pl-1 bg-gray-900/50">
         <div className="relative h-full border border-cyan-800 rounded-lg shadow-inner overflow-hidden flex flex-col">
           <iframe
+            ref={iframeRef}
             sandbox="allow-scripts allow-same-origin"
             srcDoc={html}
             title="preview"

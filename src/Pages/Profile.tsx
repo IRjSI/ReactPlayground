@@ -2,7 +2,7 @@ import { ChevronLeft, LoaderCircle, Trophy, Flame, Target, Calendar } from "luci
 import { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { AuthContext, AuthContextType } from "../context/authContext";
-import { useUser } from "../utils/useUser";
+import { useUser } from "../hooks/useUser";
 import StreakHeatmap from "../components/HeatMap";
 import "react-tooltip/dist/react-tooltip.css";
 import { Tooltip } from "react-tooltip";

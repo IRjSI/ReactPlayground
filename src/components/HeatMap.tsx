@@ -1,6 +1,6 @@
 import HeatMap from "@uiw/react-heat-map";
 import Tooltip from "@uiw/react-tooltip";
-import { useUser } from "../utils/useUser";
+import { useUser } from "../hooks/useUser";
 import { Activity } from "../types/types";
 
 const StreakHeatmap = () => {
