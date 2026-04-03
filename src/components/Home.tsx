@@ -1,12 +1,11 @@
-import { useContext, useEffect, useMemo, useState } from 'react';
-import axios from 'axios';
+import { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import * as Babel from '@babel/standalone';
 import { loader } from "@monaco-editor/react";
 import { AuthContext, AuthContextType } from '../context/authContext';
 import { PanelGroup, PanelResizeHandle } from "react-resizable-panels";
 import LandingPage from '../Pages/LandingPage';
 import { io } from "socket.io-client";
-import { useUser } from '../utils/useUser';
+import { useUser } from '../hooks/useUser';
 import 'react-tooltip/dist/react-tooltip.css';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 
@@ -19,8 +18,11 @@ import { QuestionSidebar } from './QuestionSidebar';
 import { EditorPanel } from './EditorPanel';
 import { PreviewPanel } from './PreviewPanel';
 
+/* API */
+import { getSolutionsAPI, getChallengesAPI, submitCodeAPI, addSolutionAPI } from '../services/API';
+
 // const socket = io("http://localhost:4000");
-const socket = io("https://rpg-proxy.onrender.com");
+const socket = import.meta.env.VITE_ENV === "dev" ? io("http://localhost:4000") : io("https://rpg-proxy.onrender.com");
 
 loader.init().then((monaco) => {
   monaco.editor.defineTheme("custom-dark", {
@@ -60,33 +62,22 @@ const Home = () => {
   
   const { data: solutions = []} = useQuery({
     queryKey: ['solutions', token],
-    queryFn: async () => {
-      const res = await axios.get(
-        `${import.meta.env.VITE_BACKEND_URL}/solutions/get-solutions`,
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-      return res.data.data;
-    },
+    queryFn: getSolutionsAPI,
     enabled: !!token,
     staleTime: 1000 * 60 * 10,
+    retry: 1,
   });
   
-  const { data: allQues = []} = useQuery<QuestionType[]>({
+  const { data: questions = []} = useQuery<QuestionType[]>({
     queryKey: ['challenges', token],
-    queryFn: async () => {
-      const res = await axios.get(
-        `${import.meta.env.VITE_BACKEND_URL}/challenges/get-challenges`,
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-      return res.data.data;
-    },
+    queryFn: getChallengesAPI,
     enabled: !!token,
     staleTime: 1000 * 60 * 10,
+    retry: 1,
   });
 
   // set all the questions statements
   // const questions = allQues?.map(q => q.statement) || [];
-  const questions = allQues;
 
   // for showing the preview
   // Generates an HTML document with compiled user code and React runtime
@@ -117,15 +108,30 @@ const Home = () => {
 
   // to store html returned
   const html = useMemo(() => compileCode(code), [code]);
+  const iframeRef = useRef<HTMLIFrameElement>(null);
 
   // check if the user submitted code is correct or not
   const compareSolution = async () => {
+    <iframe ref={iframeRef} />
+
     // get the iframe
-    const iframe = document.querySelector("iframe") as HTMLIFrameElement;
+    const iframe = iframeRef.current;
+
+    if (!iframe) {
+      setOutput("Iframe not found");
+      return;
+    }
     // set the source as html(compiledCode)
     iframe.srcdoc = html;
 
-    await new Promise(res => iframe.onload = res);
+    // wait for load safely
+    await new Promise<void>((resolve) => {
+      const handler = () => {
+        iframe.onload = null; // cleanup
+        resolve();
+      };
+      iframe.onload = handler;
+    });
 
     const iframeDoc = iframe.contentDocument?.documentElement.outerHTML;
     if (!iframeDoc) return setOutput("Iframe not loaded");
@@ -138,14 +144,13 @@ const Home = () => {
     const challengeId = `challenge${ques + 1}Validator`;
 
     try {
-      const res = await axios.post(
-        `${import.meta.env.VITE_BACKEND_URL}/submission/submit`,
-        { iframeDoc, challengeId }
-      );
-      const { solutionId } = res.data;
+      const res = await submitCodeAPI(iframeDoc, challengeId);
+      const { solutionId } = res;
 
       // Register for result
       socket.emit("register", solutionId);
+
+      socket.off("solutionResult");
 
       socket.once("solutionResult", async (data: any) => {
         if (data.solutionId !== solutionId) return;
@@ -172,11 +177,8 @@ const Home = () => {
 
   // add solution -> add the solution in the Solution's table
   const addSolution = async () => {
-    await axios.post(
-      `${import.meta.env.VITE_BACKEND_URL}/solutions/add-solution`,
-      { challengeId: questions[ques]._id, solution: code },
-      { headers: { Authorization: `Bearer ${token}` } }
-    );
+    const challengeId = questions[ques]._id;
+    await addSolutionAPI(challengeId, code);
   }
 
   const nextClick = () => {
@@ -288,7 +290,7 @@ const Home = () => {
 
         <PanelResizeHandle className="w-1 rounded bg-cyan-900 hover:bg-cyan-400 transition-colors cursor-col-resize" />
 
-        <PreviewPanel html={html} output={output} compareSolution={compareSolution} />
+        <PreviewPanel html={html} output={output} compareSolution={compareSolution} iframeRef={iframeRef} />
       </PanelGroup>
     </div>
   );
