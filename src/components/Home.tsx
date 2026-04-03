@@ -21,7 +21,6 @@ import { PreviewPanel } from './PreviewPanel';
 /* API */
 import { getSolutionsAPI, getChallengesAPI, submitCodeAPI, addSolutionAPI } from '../services/API';
 
-// const socket = io("http://localhost:4000");
 const socket = import.meta.env.VITE_ENV === "dev" ? io("http://localhost:4000") : io("https://rpg-proxy.onrender.com");
 
 loader.init().then((monaco) => {
@@ -76,9 +75,6 @@ const Home = () => {
     retry: 1,
   });
 
-  // set all the questions statements
-  // const questions = allQues?.map(q => q.statement) || [];
-
   // for showing the preview
   // Generates an HTML document with compiled user code and React runtime
   const compileCode = (inputCode: string) => {
@@ -89,12 +85,13 @@ const Home = () => {
         <html>
           <body>
             <div id="root"></div>
-            <script crossorigin src="https://unpkg.com/react@17/umd/react.development.js"></script>
-            <script crossorigin src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+            <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+            <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
             <script>
               try {
                 ${compiled}
-                ReactDOM.render(React.createElement(App), document.getElementById('root'));
+                const root = ReactDOM.createRoot(document.getElementById('root'));
+                root.render(React.createElement(App));
               } catch(e) {
                 document.body.innerHTML = '<pre>' + e + '</pre>';
               }
