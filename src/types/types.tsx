@@ -1,3 +1,5 @@
+import { Ref } from "react";
+
 export type UserProps = {
   user: {
     username: string;
@@ -71,4 +73,5 @@ export type PreviewPanelProps = {
   html: string;
   output: string;
   compareSolution: () => Promise<void>;
+  iframeRef: Ref<HTMLIFrameElement>;
 };
