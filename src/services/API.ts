@@ -1,8 +1,20 @@
 import { apiClient } from "./apiClient";
 
 async function getSolutionsAPI() {
-    const res = await apiClient.get("/solutions/get-solutions");
-    return res.data.data;
+  const res = await apiClient.get("/solutions/get-solutions");
+
+  const data = await Promise.all(
+    res.data.data.map(async (sol: any) => {
+      const code = await fetch(sol.solution).then(res => res.text());
+
+      return {
+        challenge: sol.challenge,
+        solution: code,
+      };
+    })
+  );
+
+  return data;
 }
 
 async function getChallengesAPI() {
