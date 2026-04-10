@@ -3,113 +3,232 @@ import Header from "../components/Header";
 import { Link } from "react-router-dom";
 import { AuthContext, AuthContextType } from "../context/authContext";
 import Home from "../components/Home";
-import { 
-  Zap, 
+import {
   ArrowRight,
   Terminal,
-  GitBranch,
+  Cpu,
+  Activity,
 } from "lucide-react";
 
 const LandingPage = () => {
   const { isLoggedIn } = useContext(AuthContext) as AuthContextType;
-  
+
   if (isLoggedIn) return <Home />;
 
   return (
-    <div className="min-h-screen bg-linear-to-b from-gray-950 via-gray-900 to-gray-950 text-white">
-      {/* Animated Background */}
-      <div className="fixed inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(6,182,212,0.1),transparent_50%)]" />
-      <div className="fixed inset-0 bg-[radial-gradient(circle,rgba(6,182,212,0.03)_1px,transparent_1px)] [bg-size:50px_50px]" />
-      
+    <div className="min-h-screen bg-[#0a0a0a] text-white">
+      <div className="fixed inset-0 opacity-[0.04] bg-[radial-gradient(circle,white_1px,transparent_1px)] background-size-[40px_40px]" />
+
       <div className="relative z-10">
-        {/* Header */}
-        <div className="px-4 sm:px-6 lg:px-8 py-4 max-w-7xl mx-auto">
+        <div className="px-6 py-4 max-w-6xl mx-auto">
           <Header />
         </div>
 
-        {/* Hero Section */}
-        <section className="px-4 sm:px-6 lg:px-8 pt-20 pb-16 max-w-7xl mx-auto">
-          <div className="text-center space-y-8">
-            {/* Main Heading */}
-            <div className="space-y-4">
-              <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight">
-                Master React Through
+        <section className="px-6 pt-24 pb-20 max-w-6xl mx-auto">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+
+            <div>
+              <h1 className="text-5xl font-semibold leading-tight tracking-tight">
+                Your React code
                 <br />
-                <span className="text-transparent bg-clip-text bg-linear-to-r from-cyan-400 via-cyan-300 to-cyan-500">
-                  Hands-On Coding
-                </span>
+                <span>gets executed.</span>
               </h1>
-              <p className="text-xl text-gray-400 max-w-2xl mx-auto">
-                Solve React challenges, track your progress, and level up your frontend development skills.
+
+              <p className="mt-6 text-gray-400 text-lg max-w-lg">
+                Not parsed. Not compared.
+                <br />
+                It runs in a browser, gets clicked, tested, and either breaks, or passes.
               </p>
+
+              <div className="mt-8">
+                <Link
+                  to="/login"
+                  className="inline-flex items-center gap-2 px-6 py-3 bg-cyan-500 hover:bg-cyan-400 rounded-md font-medium transition"
+                >
+                  Run your first solution
+                  <ArrowRight size={18} />
+                </Link>
+              </div>
             </div>
 
-            {/* CTA Buttons */}
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <Link
-                to="/login"
-                className="group inline-flex items-center gap-2 px-8 py-4 bg-cyan-500 hover:bg-cyan-400 rounded-lg text-lg font-semibold transition-all transform hover:scale-105 shadow-lg shadow-cyan-500/25"
-              >
-                <span>Get Started Free</span>
-                <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
-              </Link>
+            <TerminalWindow>
+              <div className="text-gray-500">$ submit solution</div>
+
+              <div className="text-cyan-400">→ queued</div>
+              <div className="text-cyan-400">→ worker picked job</div>
+              <div className="text-cyan-400">→ launching browser</div>
+              <div className="text-cyan-400">→ simulating click()</div>
+              <div className="text-cyan-400">→ verifying DOM</div>
+
+              <div className="text-green-400">✓ passed</div>
+            </TerminalWindow>
+
+          </div>
+        </section>
+
+        <section className="px-6 py-20 max-w-6xl mx-auto">
+          <div className="grid md:grid-cols-3 gap-6">
+
+            <Feature
+              icon={<Terminal size={20} />}
+              title="Write Real Code"
+              desc="No MCQs. No fake environments. Just React."
+            />
+
+            <Feature
+              icon={<Cpu size={20} />}
+              title="Executed in Browser"
+              desc="Your code runs in a real DOM, not a mock runtime."
+            />
+
+            <Feature
+              icon={<Activity size={20} />}
+              title="Async Evaluation"
+              desc="Worker-based execution with real behavioral validation."
+            />
+          </div>
+        </section>
+
+        <section className="px-6 py-24 max-w-5xl mx-auto">
+          <h2 className="text-3xl font-semibold mb-12 text-center">
+            What you’ll actually face
+          </h2>
+
+          <CodeWindow title="App.jsx">
+            <pre>
+              {`function App() {
+  const [on, setOn] = useState(false);
+
+  return (
+    <button onClick={() => setOn(!on)}>
+      {on ? "ON" : "OFF"}
+    </button>
+  );
+}`}
+            </pre>
+
+            <div className="mt-6 text-gray-500">// test</div>
+            <div className="mt-2 text-cyan-400">→ click button</div>
+            <div className="text-cyan-400">→ expect "ON"</div>
+            <div className="text-cyan-400">→ click again</div>
+            <div className="text-cyan-400">→ expect "OFF"</div>
+          </CodeWindow>
+        </section>
+
+        <section className="px-6 py-24 max-w-6xl mx-auto">
+          <h2 className="text-3xl font-semibold mb-12 text-center">
+            Why this feels different
+          </h2>
+
+          <div className="grid md:grid-cols-2 gap-8">
+
+            <div className="border border-gray-800 rounded-xl p-6">
+              <h3 className="font-medium mb-4 text-gray-400">Typical platforms</h3>
+              <ul className="space-y-2 text-gray-500 text-sm">
+                <li>• Compare output</li>
+                <li>• Static test cases</li>
+                <li>• No real UI interaction</li>
+                <li>• Pass ≠ correct behavior</li>
+              </ul>
+            </div>
+
+            <div className="border border-cyan-500/40 rounded-xl p-6 bg-cyan-500/5">
+              <h3 className="font-medium mb-4 text-cyan-400">This system</h3>
+              <ul className="space-y-2 text-sm">
+                <li>• Runs in real browser</li>
+                <li>• Simulates user actions</li>
+                <li>• Validates DOM behavior</li>
+                <li>• Fails if UX is wrong</li>
+              </ul>
             </div>
 
           </div>
         </section>
 
-        {/* How It Works Section */}
-        <section className="px-4 sm:px-6 lg:px-8 py-24 bg-gray-900/50">
-          <div className="max-w-7xl mx-auto">
-            <div className="text-center mb-16">
-              <h2 className="text-4xl font-bold mb-4">How it works</h2>
-              <p className="text-xl text-gray-400">
-                Start solving in three simple steps
-              </p>
-            </div>
+        <section className="px-6 py-24 text-center">
+          <h2 className="text-3xl font-semibold">
+            This is not practice.
+          </h2>
+          <p className="text-gray-400 mt-3">
+            It’s execution under constraints.
+          </p>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              <StepCard
-                number="01"
-                icon={<Terminal className="text-cyan-400" size={32} />}
-                title="Choose a Challenge"
-                description="Pick from beginner to advanced React challenges covering hooks, state management, and more."
-              />
-              <StepCard
-                number="02"
-                icon={<GitBranch className="text-cyan-400" size={32} />}
-                title="Write Your Solution"
-                description="Code in our interactive editor with syntax highlighting and instant error detection."
-              />
-              <StepCard
-                number="03"
-                icon={<Zap className="text-cyan-400" size={32} />}
-                title="Submit & Learn"
-                description="Get instant feedback, see test results, and learn from the community's solutions."
-              />
-            </div>
+          <div className="mt-8">
+            <Link
+              to="/login"
+              className="inline-flex items-center gap-2 px-6 py-3 border border-cyan-500 text-cyan-400 hover:bg-cyan-500 hover:text-black rounded-md transition"
+            >
+              Try it
+              <ArrowRight size={18} />
+            </Link>
           </div>
         </section>
 
-        {/* Footer */}
-        <footer className="px-4 sm:px-6 lg:px-8 py-12 border-t border-gray-800 max-w-7xl mx-auto">
-          <div className="text-center text-gray-400">
-            <p>© 2026 React Practice Platform. Built for developers, by developers.</p>
-          </div>
+        <footer className="px-6 py-10 text-center text-gray-500 text-sm border-t border-gray-800">
+          © React Playground 2026
         </footer>
       </div>
     </div>
   );
 };
 
-function StepCard({ number, icon, title, description }: any) {
+function Feature({ icon, title, desc }: any) {
   return (
-    <div className="relative">
-      <div className="text-6xl font-bold text-gray-800 absolute -top-4 -left-2">{number}</div>
-      <div className="relative bg-gray-900/60 border border-gray-800 rounded-xl p-8 hover:border-cyan-500/50 transition-all">
-        <div className="mb-4">{icon}</div>
-        <h3 className="text-2xl font-semibold mb-3 text-white">{title}</h3>
-        <p className="text-gray-400">{description}</p>
+    <div className="border border-gray-800 p-6 rounded-lg bg-[#0f0f0f]">
+      <div className="mb-4 text-cyan-400">{icon}</div>
+      <h3 className="font-medium mb-2">{title}</h3>
+      <p className="text-gray-500 text-sm">{desc}</p>
+    </div>
+  );
+}
+
+function CodeWindow({ title, children }: any) {
+  return (
+    <div className="bg-[#0b0b0b] border border-gray-800 rounded-xl overflow-hidden shadow-lg">
+      
+      <div className="flex items-center justify-between px-4 py-2 border-b border-gray-800 bg-[#111]">
+        
+        <div className="flex items-center gap-2">
+          <div className="w-3 h-3 rounded-full bg-red-500" />
+          <div className="w-3 h-3 rounded-full bg-yellow-500" />
+          <div className="w-3 h-3 rounded-full bg-green-500" />
+        </div>
+
+        <div className="text-xs text-gray-500 font-mono">
+          {title}
+        </div>
+
+        <div className="w-12" />
+      </div>
+
+      <div className="p-5 font-mono text-sm text-gray-300 overflow-x-auto">
+        {children}
+      </div>
+    </div>
+  );
+}
+
+function TerminalWindow({ children }: any) {
+  return (
+    <div className="bg-[#0b0b0b] border border-gray-800 rounded-xl overflow-hidden shadow-lg">
+      
+      <div className="flex items-center justify-between px-4 py-2 border-b border-gray-800 bg-[#111]">
+        
+        <div className="flex gap-2">
+          <div className="w-3 h-3 rounded-full bg-red-500" />
+          <div className="w-3 h-3 rounded-full bg-yellow-500" />
+          <div className="w-3 h-3 rounded-full bg-green-500" />
+        </div>
+
+        <div className="text-xs text-gray-500 font-mono">
+          execution.log
+        </div>
+
+        <div className="w-12" />
+      </div>
+
+      <div className="p-5 font-mono text-sm text-gray-300 space-y-2">
+        {children}
       </div>
     </div>
   );
