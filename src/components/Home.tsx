@@ -45,7 +45,7 @@ loader.init().then((monaco) => {
 const Home = () => {
   // state for code written by the user
   const [code, setCode] = useState(`// React is imported by default.\n// to use hooks, for eg. useState use it like React.useState()\nfunction App() {\n  return <h1>Hello</h1>;\n}`);
-  
+
   const [output, setOutput] = useState('');
   // to trigger useEffect
   // const [refetch, setRefetch] = useState(false);
@@ -58,16 +58,16 @@ const Home = () => {
 
   const { token, isLoggedIn, logout } = useContext(AuthContext) as AuthContextType;
   const { userInfo } = useUser();
-  
-  const { data: solutions = []} = useQuery({
+
+  const { data: solutions = [] } = useQuery({
     queryKey: ['solutions', token],
     queryFn: getSolutionsAPI,
     enabled: !!token,
     staleTime: 1000 * 60 * 10,
     retry: 1,
   });
-  
-  const { data: questions = []} = useQuery<QuestionType[]>({
+
+  const { data: questions = [] } = useQuery<QuestionType[]>({
     queryKey: ['challenges', token],
     queryFn: getChallengesAPI,
     enabled: !!token,
@@ -206,14 +206,14 @@ const Home = () => {
     const handler = (e: KeyboardEvent) => {
       if ((e.ctrlKey || e.metaKey) && e.key === "s") {
         e.preventDefault();
-        e.stopPropagation(); 
+        e.stopPropagation();
       }
     }
 
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
   }, []);
-  
+
   // shortcut for submitting the solution
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
@@ -226,7 +226,7 @@ const Home = () => {
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
   }, []);
-  
+
   // shortcut for logging out
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {

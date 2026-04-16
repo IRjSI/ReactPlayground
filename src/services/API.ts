@@ -5,7 +5,13 @@ async function getSolutionsAPI() {
 
   const data = await Promise.all(
     res.data.data.map(async (sol: any) => {
-      const code = await fetch(sol.solution).then(res => res.text());
+      let code = sol.solution;
+      if (typeof code === 'string' && code.startsWith('http')) {
+        const response = await fetch(sol.solution);
+        if (response.ok && !response.headers.get('content-type')?.includes('text/html')) {
+          code = await response.text();
+        }
+      }
 
       return {
         challenge: sol.challenge,
@@ -40,8 +46,8 @@ async function addSolutionAPI(challengeId: string, code: string) {
 }
 
 export {
-    getSolutionsAPI,
-    getChallengesAPI,
-    submitCodeAPI,
-    addSolutionAPI
+  getSolutionsAPI,
+  getChallengesAPI,
+  submitCodeAPI,
+  addSolutionAPI
 }
