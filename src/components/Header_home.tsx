@@ -20,6 +20,7 @@ export function Header({
   prevClick,
   logoutClick
 }: HeaderProps) {
+
   return (
     <div className="flex flex-wrap gap-3 md:gap-0 md:flex-nowrap justify-between items-center p-3 md:p-4 bg-gray-900 text-white border-b border-cyan-700/40 shadow-lg">
 

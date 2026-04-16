@@ -19,7 +19,7 @@ import { EditorPanel } from './EditorPanel';
 import { PreviewPanel } from './PreviewPanel';
 
 /* API */
-import { getSolutionsAPI, getChallengesAPI, submitCodeAPI, addSolutionAPI } from '../services/API';
+import { getSolutionsAPI, getChallengesAPI, submitCodeAPI } from '../services/API';
 
 const socket = import.meta.env.VITE_ENV === "dev" ? io("http://localhost:4000") : io("https://rpg-proxy.onrender.com");
 
@@ -138,10 +138,10 @@ const Home = () => {
 
   async function submitSolution(iframeDoc: string) {
     setOutput("checking...");
-    const challengeId = `challenge${ques + 1}Validator`;
+    const validatorKey = `challenge${ques + 1}Validator`;
 
     try {
-      const res = await submitCodeAPI(iframeDoc, challengeId);
+      const res = await submitCodeAPI(iframeDoc, validatorKey, questions[ques]._id);
       const { solutionId } = res;
 
       // Register for result
@@ -154,18 +154,16 @@ const Home = () => {
 
         setOutput(data.result === "valid" ? "Correct Solution" : "Incorrect Solution");
 
-        if (data.result === "valid") {
-          // add solution -> add the solution in the Solution's table
-          await addSolution();
+        // // add solution -> add the solution in the Solution's table
+        // await addSolution();
 
-          queryClient.invalidateQueries({
-            queryKey: ['solutions', token]
-          });
+        queryClient.invalidateQueries({
+          queryKey: ['solutions', token]
+        });
 
-          queryClient.invalidateQueries({
-            queryKey: ['challenges', token]
-          });
-        }
+        queryClient.invalidateQueries({
+          queryKey: ['challenges', token]
+        });
       });
     } catch {
       setOutput("error...");
@@ -173,10 +171,10 @@ const Home = () => {
   }
 
   // add solution -> add the solution in the Solution's table
-  const addSolution = async () => {
-    const challengeId = questions[ques]._id;
-    await addSolutionAPI(challengeId, code);
-  }
+  // const addSolution = async () => {
+  //   const challengeId = questions[ques]._id;
+  //   await addSolutionAPI(challengeId, code);
+  // }
 
   const nextClick = () => {
     setQues(ques < questions.length - 1 ? ques + 1 : ques);
