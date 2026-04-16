@@ -194,7 +194,7 @@ const Home = () => {
       (s: any) => s.challenge.toString() === currentQ._id.toString()
     );
 
-    if (existing) {
+    if (existing && existing.solution) {
       setCode(existing.solution);
     } else {
       setCode(`// React is imported by default.\n// to use hooks, for eg. useState use it like React.useState()\nfunction App() {\n  return <h1>Hello</h1>;\n}`);
