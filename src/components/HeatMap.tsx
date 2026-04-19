@@ -5,12 +5,13 @@ import { Activity } from "../types/types";
 
 const StreakHeatmap = () => {
   const { userInfo } = useUser();
-  
+  console.log(userInfo?.userActivity);
+
   const value: Activity[] = Array.isArray(userInfo?.userActivity)
     ? userInfo.userActivity.map((d: any) => ({
-        date: new Date(d.date).toLocaleDateString("en-CA"),
-        count: d.count || 0,
-      }))
+      date: new Date(d.date).toLocaleDateString("en-CA"),
+      count: d.count || 0,
+    }))
     : [];
 
   const today = new Date();
@@ -18,33 +19,36 @@ const StreakHeatmap = () => {
   oneYearAgo.setFullYear(today.getFullYear() - 1);
 
   return (
-    <div className="p-4 bg-gray-900/40 border border-cyan-400/40 rounded-2xl shadow-lg">
-      <h2 className="text-white font-semibold mb-3">
+    <div className="w-full">
+      <h2 className="text-xl font-bold text-white mb-6">
         Activity Streak
       </h2>
 
-      <div className="flex justify-center overflow-x-auto">
+      <div className="flex justify-start overflow-x-auto pb-4">
         <HeatMap
           value={value}
           startDate={oneYearAgo}
           endDate={today}
           width={850}
-          rectRender={(props, data) => (
-            <Tooltip
-              placement="top"
-              content={`submissions: ${data?.count || 0}`}
-            >
-              <rect
-                {...props}
-                rx={1}
-                ry={1}
-                style={{
-                  stroke: "rgba(0,255,255,0.4)",
-                  strokeWidth: data?.count ? 0.7 : 0.2,
-                }}
-              />
-            </Tooltip>
-          )}
+          rectRender={(props, data) => {
+            const dateStr = data?.date ? `${data.date}` : "Date not found";
+            return (
+              <Tooltip
+                placement="top"
+                content={`${dateStr}: ${data?.count || 0} submissions`}
+              >
+                <rect
+                  {...props}
+                  rx={1}
+                  ry={1}
+                  style={{
+                    stroke: "rgba(0,255,255,0.4)",
+                    strokeWidth: data?.count ? 0.7 : 0.2,
+                  }}
+                />
+              </Tooltip>
+            );
+          }}
           panelColors={{
             0: "#0f172a",
             1: "#082f49",

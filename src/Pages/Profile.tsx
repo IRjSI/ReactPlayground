@@ -47,8 +47,8 @@ export default function Profile() {
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="mb-8">
-          <Link 
-            to="/home" 
+          <Link
+            to="/home"
             className="inline-flex items-center gap-2 text-cyan-400 hover:text-cyan-300 transition-colors group"
           >
             <ChevronLeft className="group-hover:-translate-x-1 transition-transform" size={20} />
@@ -72,19 +72,19 @@ export default function Profile() {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
             {/* left side - user card*/}
             <div className="lg:col-span-4 xl:col-span-3">
-              <div className="bg-gray-900/60 backdrop-blur-sm border border-gray-800 rounded-xl shadow-2xl sticky top-8">
+              <div className="sticky top-8 pt-4">
                 <Tooltip id="tooltip" className="bg-gray-800 text-cyan-400 border border-cyan-400/30" />
 
                 {/* Profile Header */}
-                <div className="p-6 border-b border-gray-800">
+                <div className="mb-8">
                   <div
                     data-tooltip-id="tooltip"
                     data-tooltip-content="Logout (Ctrl + L)"
                     id="logout-btn"
-                    className="cursor-pointer group"
+                    className="cursor-pointer group flex items-center gap-4"
                     onClick={logoutClick}
                   >
-                    <div className="relative w-24 h-24 mx-auto mb-4">
+                    <div className="relative w-20 h-20 shrink-0">
                       <img
                         src={
                           userInfo?.user.avatar
@@ -92,16 +92,15 @@ export default function Profile() {
                             : "https://hauntedjukebox.com/wp-content/uploads/2024/08/stalker.jpg"
                         }
                         alt="avatar"
-                        className="rounded-xl w-full h-full object-cover ring-2 ring-cyan-400/20 group-hover:ring-cyan-400/50 transition-all"
+                        className="rounded-full w-full h-full object-cover ring-2 ring-cyan-400/20 group-hover:ring-cyan-400/50 transition-all"
                       />
-                      <div className="absolute inset-0 rounded-xl bg-linear-to-t from-cyan-400/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                     </div>
 
-                    <div className="text-center">
+                    <div>
                       <h1 className="text-2xl font-bold text-white mb-1 group-hover:text-cyan-400 transition-colors">
                         {userInfo?.user.username || "Guest"}
                       </h1>
-                      <p className="text-sm text-gray-400 group-hover:text-gray-300 transition-colors">
+                      <p className="text-xs text-gray-400 group-hover:text-gray-300 transition-colors">
                         Click to logout
                       </p>
                     </div>
@@ -109,25 +108,24 @@ export default function Profile() {
                 </div>
 
                 {/* User Info */}
-                <div className="p-6 space-y-4">
-                  <div className="flex items-center justify-between py-3 px-4 bg-gray-800/50 rounded-lg">
-                    <span className="text-sm text-gray-400">Email</span>
-                    <span className="text-sm text-cyan-400 font-medium truncate ml-2">
+                <div className="space-y-6">
+                  <div>
+                    <p className="text-xs text-gray-500 uppercase tracking-wider mb-1">Email</p>
+                    <p className="text-base text-cyan-400 font-medium truncate">
                       {userInfo?.user.email || "N/A"}
-                    </span>
+                    </p>
                   </div>
 
-                  <div className="flex items-center justify-between py-3 px-4 bg-gray-800/50 rounded-lg">
-                    <span className="text-sm text-gray-400">Google</span>
-                    <span
-                      className={`text-sm font-semibold ${
-                        userInfo?.user.provider === "google"
-                          ? "text-green-400"
-                          : "text-gray-500"
-                      }`}
+                  <div>
+                    <p className="text-xs text-gray-500 uppercase tracking-wider mb-1">Google</p>
+                    <p
+                      className={`text-base font-semibold ${userInfo?.user.provider === "google"
+                        ? "text-green-400"
+                        : "text-gray-500"
+                        }`}
                     >
                       {userInfo?.user.provider === "google" ? "Connected" : "Not linked"}
-                    </span>
+                    </p>
                   </div>
                 </div>
               </div>
@@ -136,20 +134,16 @@ export default function Profile() {
             {/* right side */}
             <div className="lg:col-span-8 xl:col-span-9 space-y-6">
               {/* Welcome Banner */}
-              <div className="bg-linear-to-r from-cyan-500/10 via-cyan-400/5 to-transparent border border-cyan-400/20 rounded-xl p-8 shadow-xl">
-                <div className="flex items-start justify-between">
-                  <div>
-                    <h1 className="text-3xl sm:text-4xl font-bold mb-2">
-                      Welcome back,{" "}
-                      <span className="text-transparent bg-clip-text bg-linear-to-r from-cyan-400 to-cyan-300">
-                        {userInfo?.user.username || "Guest"}
-                      </span>
-                    </h1>
-                    <p className="text-gray-400">
-                      Track your React learning journey
-                    </p>
-                  </div>
-                </div>
+              <div className="py-4">
+                <h1 className="text-4xl sm:text-5xl font-bold mb-2 text-white">
+                  Welcome back,{" "}
+                  <span className="text-cyan-400">
+                    {userInfo?.user.username || "Guest"}
+                  </span>
+                </h1>
+                <p className="text-gray-400 text-lg">
+                  Track your React learning journey
+                </p>
               </div>
 
               {/* Stats Grid */}
@@ -178,7 +172,7 @@ export default function Profile() {
               </div>
 
               {/* Activity Heatmap */}
-              <div className="bg-gray-900/60 backdrop-blur-sm border border-gray-800 rounded-xl p-6 shadow-xl">
+              <div className="pt-6 mt-4 border-t border-gray-800/60">
                 <div className="flex items-center gap-3 mb-6">
                   <Calendar className="text-cyan-400" size={24} />
                   <div>
@@ -187,37 +181,36 @@ export default function Profile() {
                   </div>
                 </div>
 
-                <div className="overflow-x-auto">
+                <div className="overflow-x-auto -mx-4 px-4 sm:mx-0 sm:px-0">
                   <StreakHeatmap />
                 </div>
 
                 <p className="text-xs text-gray-500 mt-4 flex items-center gap-2">
-                  <span className="w-2 h-2 bg-cyan-400 rounded-full"></span>
+                  <span className="w-2 h-2 bg-cyan-400 rounded-full text-white"></span>
                   Only accepted solutions are counted as submissions
                 </p>
               </div>
 
               {/* Additional Stats */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-
-                <div className="bg-gray-900/60 backdrop-blur-sm border border-gray-800 rounded-xl p-6">
+              <div className="grid grid-cols-1 gap-4 mt-6 pt-6 border-t border-gray-800/60">
+                <div className="py-2">
                   <h3 className="text-lg font-semibold text-white mb-4">Quick Stats</h3>
-                  <div className="space-y-3">
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm text-gray-400">Account Type</span>
-                      <span className="text-sm font-medium text-cyan-400">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+                    <div>
+                      <span className="block text-sm text-gray-500 uppercase tracking-wider mb-1">Account Type</span>
+                      <span className="text-lg font-medium text-cyan-400">
                         {userInfo?.user.provider === "google" ? "Google" : "Standard"}
                       </span>
                     </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm text-gray-400">Total Progress</span>
-                      <span className="text-sm font-medium text-white">
+                    <div>
+                      <span className="block text-sm text-gray-500 uppercase tracking-wider mb-1">Total Progress</span>
+                      <span className="text-lg font-medium text-white">
                         {userInfo?.noOfChallenges || 0} challenges
                       </span>
                     </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm text-gray-400">Streak Status</span>
-                      <span className="text-sm font-medium text-orange-400">
+                    <div>
+                      <span className="block text-sm text-gray-500 uppercase tracking-wider mb-1">Streak Status</span>
+                      <span className="text-lg font-medium text-orange-400">
                         {(userInfo?.user?.streak?.current || 0) > 0 ? "Active 🔥" : "Start today!"}
                       </span>
                     </div>
@@ -235,26 +228,20 @@ export default function Profile() {
 function StatCard({ title, value, icon, trend, highlight }: any) {
   return (
     <div
-      className={`relative overflow-hidden rounded-xl p-6 transition-all hover:scale-[1.02] ${
-        highlight
-          ? "bg-linear-to-br from-orange-500/20 to-orange-600/5 border border-orange-400/30"
-          : "bg-gray-900/60 border border-gray-800"
-      } backdrop-blur-sm shadow-xl group`}
+      className={`relative py-4 transition-all ${
+        highlight ? "text-orange-400" : "text-white"
+      } group`}
     >
-      {highlight && (
-        <div className="absolute inset-0 bg-linear-to-r from-orange-400/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-      )}
-      
-      <div className="relative z-10">
-        <div className="flex items-center justify-between mb-3">
-          <div className="p-2 bg-gray-800/50 rounded-lg">
+      <div className="flex flex-col">
+        <div className="flex items-center gap-2 mb-2">
+          <div className={`${highlight ? "text-orange-400" : "text-cyan-400"}`}>
             {icon}
           </div>
+          <p className="text-sm font-medium text-gray-400 uppercase tracking-wider">{title}</p>
         </div>
 
         <div>
-          <p className="text-sm text-gray-400 mb-1">{title}</p>
-          <p className="text-3xl sm:text-4xl font-bold text-white mb-1">
+          <p className="text-4xl font-bold mb-1">
             {value}
           </p>
           <p className="text-xs text-gray-500">{trend}</p>
