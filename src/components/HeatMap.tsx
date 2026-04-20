@@ -5,7 +5,6 @@ import { Activity } from "../types/types";
 
 const StreakHeatmap = () => {
   const { userInfo } = useUser();
-  console.log(userInfo?.userActivity);
 
   const value: Activity[] = Array.isArray(userInfo?.userActivity)
     ? userInfo.userActivity.map((d: any) => ({
