@@ -6,7 +6,7 @@ import { getChallengeByIdAPI, getSolutionByChallengeIdAPI, submitCodeAPI } from 
 import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { AuthContext, AuthContextType } from "../context/authContext";
 import { useNavigate } from "react-router-dom";
-import { Flame } from "lucide-react";
+import { Flame, Home } from "lucide-react";
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
 import { Editor, loader } from "@monaco-editor/react";
 import { io } from 'socket.io-client';
@@ -158,6 +158,7 @@ const ChallengeLayout = ({ ques }: { ques: number }) => {
 
     useEffect(() => {
         const existing = solution;
+        console.log(existing);
 
         if (existing && existing?.solution) {
             setCode(existing.solution);
@@ -182,6 +183,13 @@ const ChallengeLayout = ({ ques }: { ques: number }) => {
 
 
             <div className="flex flex-wrap gap-3 md:gap-0 md:flex-nowrap justify-between items-center p-3 md:p-4 bg-gray-900 text-white border-b border-cyan-700/40 shadow-lg">
+
+                <button
+                    onClick={() => navigate("/home")}
+                    className="border border-cyan-400/50 p-2 rounded-lg transition-all hover:bg-cyan-500/20 hover:border-cyan-400 shadow-sm cursor-pointer"
+                >
+                    <Home fill='#00d3f2' stroke='#00d3f2' size={16} />
+                </button>
 
                 {/* LEFT CONTROLS */}
                 <div className="flex items-center gap-2">
