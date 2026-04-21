@@ -23,8 +23,31 @@ async function getSolutionsAPI() {
   return data;
 }
 
+async function getSolutionByChallengeIdAPI(challengeId: string) {
+  const res = await apiClient.get(`/solutions/get-solution/${challengeId}`);
+
+  const sol = res.data.data;
+  let code = sol.solution;
+  if (typeof code === 'string' && code.startsWith('http')) {
+    const response = await fetch(sol.solution);
+    if (response.ok && !response.headers.get('content-type')?.includes('text/html')) {
+      code = await response.text();
+    }
+  }
+
+  return {
+    challenge: sol.challenge,
+    solution: code,
+  };
+}
+
 async function getChallengesAPI() {
   const res = await apiClient.get("/challenges/get-challenges");
+  return res.data.data;
+}
+
+async function getChallengeByIdAPI(challengeId: string) {
+  const res = await apiClient.get(`/challenges/get-challenge/${challengeId}`);
   return res.data.data;
 }
 
@@ -47,7 +70,9 @@ async function addSolutionAPI(challengeId: string, code: string) {
 
 export {
   getSolutionsAPI,
+  getSolutionByChallengeIdAPI,
   getChallengesAPI,
+  getChallengeByIdAPI,
   submitCodeAPI,
   addSolutionAPI
 }

@@ -1,5 +1,5 @@
 import {
-  ChevronLeft, 
+  ChevronLeft,
   ChevronRight,
   Flame,
   MenuIcon,
@@ -37,11 +37,10 @@ export function Header({
         {/* Prev */}
         <button
           onClick={prevClick}
-          className={`p-2 rounded-lg transition ${
-            ques > 0
-              ? "bg-blue-600 hover:bg-blue-700 shadow-md"
-              : "bg-blue-500 opacity-60 cursor-not-allowed"
-          }`}
+          className={`p-2 rounded-lg transition ${ques > 0
+            ? "bg-blue-600 hover:bg-blue-700 shadow-md"
+            : "bg-blue-500 opacity-60 cursor-not-allowed"
+            }`}
           disabled={ques < 1}
         >
           <ChevronLeft size={18} />
@@ -50,11 +49,10 @@ export function Header({
         {/* Next */}
         <button
           onClick={nextClick}
-          className={`p-2 rounded-lg transition ${
-            ques < questions.length - 1
-              ? "bg-blue-600 hover:bg-blue-700 shadow-md"
-              : "bg-blue-500 opacity-60 cursor-not-allowed"
-          }`}
+          className={`p-2 rounded-lg transition ${ques < questions.length - 1
+            ? "bg-blue-600 hover:bg-blue-700 shadow-md"
+            : "bg-blue-500 opacity-60 cursor-not-allowed"
+            }`}
           disabled={ques > questions.length - 2}
         >
           <ChevronRight size={18} />

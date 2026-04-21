@@ -261,7 +261,7 @@ const Home = () => {
         ques={ques}
         setQues={setQues}
         questionMap={questionMap}
-        setQuestionMap={setQuestionMap}
+        setQuestionMap={setQuestionMap!}
         logoutClick={logoutClick}
         nextClick={nextClick}
         prevClick={prevClick}
@@ -278,9 +278,6 @@ const Home = () => {
         <EditorPanel
           code={code}
           setCode={setCode}
-          questions={questions}
-          ques={ques}
-          solutions={solutions}
         />
 
         <PanelResizeHandle className="w-1 rounded bg-cyan-900 hover:bg-cyan-400 transition-colors cursor-col-resize" />

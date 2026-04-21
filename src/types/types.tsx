@@ -63,10 +63,6 @@ export type QuestionSidebarProps = {
 export type EditorPanelProps = {
   code: string;
   setCode: React.Dispatch<React.SetStateAction<string>>;
-  questions: QuestionType[];
-  ques: number;
-  completedQues?: QuestionType[];
-  solutions: SolutionType[];
 };
 
 export type PreviewPanelProps = {
