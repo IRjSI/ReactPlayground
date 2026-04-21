@@ -35,9 +35,11 @@ async function getSolutionByChallengeIdAPI(challengeId: string) {
     }
   }
 
+
   return {
     challenge: sol.challenge,
     solution: code,
+    result: sol.result,
   };
 }
 

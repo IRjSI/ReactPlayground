@@ -25,6 +25,7 @@ export type QuestionType = {
   _id: string;
   statement: string;
   solved: boolean;
+  result: string;
 };
 
 export type SolutionType = {

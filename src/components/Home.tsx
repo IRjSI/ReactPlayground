@@ -154,8 +154,19 @@ const Home = () => {
                       {q.solved && viewMode === 'list' && (
                         <CheckCircle className="text-green-500 drop-shadow-[0_0_8px_rgba(34,197,94,0.4)]" size={18} />
                       )}
-                      <span className={`text-xs font-bold uppercase tracking-wider ${q.solved ? 'text-green-500/80' : 'text-gray-500'}`}>
-                        {q.solved ? 'Completed' : 'Not Started'}
+                      <span
+                        className={`text-xs font-bold uppercase tracking-wider ${q.result === "valid"
+                          ? "text-green-500/80"
+                          : q.result
+                            ? "text-yellow-500/80"
+                            : "text-gray-500"
+                          }`}
+                      >
+                        {q.result === "valid"
+                          ? "Completed"
+                          : q.result
+                            ? "Attempted"
+                            : "Not Started"}
                       </span>
                     </div>
 
