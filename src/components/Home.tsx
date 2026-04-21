@@ -48,11 +48,11 @@ const Home = () => {
 
             <div className="flex items-center gap-6">
               <div className="relative group">
-                <div className="absolute inset-0 bg-cyan-500/30 rounded-full blur-xl group-hover:bg-cyan-500/50 transition-colors duration-500"></div>
+                <div className="absolute inset-0 bg-cyan-500/30 rounded-full group-hover:bg-cyan-500/50 transition-colors duration-500"></div>
                 <img
                   src={userInfo?.user?.avatar || "/undraw_avatar.png"}
                   alt="avatar"
-                  className="relative w-20 h-20 rounded-full object-cover border-2 border-cyan-500/50 shadow-[0_0_15px_rgba(6,182,212,0.4)] transition-transform duration-500 group-hover:scale-105"
+                  className="relative w-20 h-20 rounded-full object-cover border-2 border-cyan-500/50 transition-transform duration-500 group-hover:scale-105"
                 />
               </div>
 
