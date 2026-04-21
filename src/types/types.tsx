@@ -35,15 +35,8 @@ export type SolutionType = {
 
 export type HeaderProps = {
   userInfo: any;
-  questions: QuestionType[];
-  ques: number;
-  setQues: React.Dispatch<React.SetStateAction<number>>;
-  completedQues?: QuestionType[];
-  questionMap: boolean;
-  setQuestionMap: React.Dispatch<React.SetStateAction<boolean>>;
+  challenge: any;
   logoutClick: () => void;
-  nextClick: () => void;
-  prevClick: () => void;
 };
 
 export type SidebarProps = {

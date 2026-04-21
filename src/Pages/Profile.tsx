@@ -228,9 +228,8 @@ export default function Profile() {
 function StatCard({ title, value, icon, trend, highlight }: any) {
   return (
     <div
-      className={`relative py-4 transition-all ${
-        highlight ? "text-orange-400" : "text-white"
-      } group`}
+      className={`relative py-4 transition-all ${highlight ? "text-orange-400" : "text-white"
+        } group`}
     >
       <div className="flex flex-col">
         <div className="flex items-center gap-2 mb-2">
