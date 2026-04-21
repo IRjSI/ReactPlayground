@@ -44,7 +44,7 @@ const ChallengeLayout = ({ ques }: { ques: number }) => {
 
     const queryClient = useQueryClient();
 
-    const { data: challenge } = useQuery({
+    const { data: challenge, isLoading: isChallengeLoading } = useQuery({
         queryKey: ['challenge', challengeId],
         queryFn: () => getChallengeByIdAPI(challengeId!),
         enabled: !!challengeId,
@@ -52,7 +52,7 @@ const ChallengeLayout = ({ ques }: { ques: number }) => {
         retry: 1,
     });
 
-    const { data: solution } = useQuery({
+    const { data: solution, isLoading: isSolutionLoading } = useQuery({
         queryKey: ['solution', challengeId],
         queryFn: () => getSolutionByChallengeIdAPI(challengeId!),
         enabled: !!challengeId,
@@ -179,18 +179,56 @@ const ChallengeLayout = ({ ques }: { ques: number }) => {
         return () => window.removeEventListener('resize', handleResize);
     }, []);
 
+    if (isChallengeLoading || isSolutionLoading) {
+        return (
+            <div className="h-screen flex flex-col bg-[#0a0a0a]">
+                <div className="h-[90px] border-b border-cyan-700/40 bg-gray-900 px-4 flex items-center justify-between shadow-lg">
+                    <div className="w-9 h-9 rounded-lg bg-gray-800 animate-pulse" />
+                    <div className="w-1/3 h-6 rounded-md bg-gray-800 animate-pulse" />
+                    <div className="flex items-center gap-3">
+                        <div className="w-16 h-8 rounded-md bg-gray-800 animate-pulse" />
+                        <div className="w-10 h-10 rounded-lg bg-gray-800 animate-pulse" />
+                    </div>
+                </div>
+
+                <div className="flex-1 flex flex-col md:flex-row gap-4 p-4">
+                    <div className="flex-1 rounded-xl bg-gray-900/50 border border-gray-800 p-4 shadow-sm flex flex-col">
+                        <div className="space-y-4 pt-4 flex-1">
+                            <div className="w-3/4 h-5 bg-gray-800/80 rounded animate-pulse" />
+                            <div className="w-1/2 h-5 bg-gray-800/60 rounded animate-pulse" />
+                            <div className="w-5/6 h-5 bg-gray-800/80 rounded animate-pulse ml-4" />
+                            <div className="w-2/3 h-5 bg-gray-800/60 rounded animate-pulse ml-4" />
+                            <div className="w-1/3 h-5 bg-gray-800/80 rounded animate-pulse" />
+                        </div>
+                    </div>
+
+                    <div className="flex-1 rounded-xl bg-gray-900/50 border border-gray-800 p-4 shadow-sm flex flex-col">
+                        <div className="w-full flex justify-end mb-4 border-b border-gray-800 pb-2">
+                            <div className="w-24 h-8 bg-gray-800 rounded animate-pulse" />
+                        </div>
+                        <div className="flex-1 bg-[#111]/40 rounded-lg border border-gray-800/50 animate-pulse" />
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
     return (
-        <div className="h-screen flex flex-col" id='panel'>
+        <div className="h-screen flex flex-col bg-[#0a0a0a]" id='panel'>
 
             <Header logoutClick={logoutClick} userInfo={userInfo} challenge={challenge} />
 
-            <PanelGroup direction={isMobile ? "vertical" : "horizontal"}>
-                <EditorPanel code={code} setCode={setCode} />
+            <div className="flex-1 overflow-hidden p-4">
+                <PanelGroup direction={isMobile ? "vertical" : "horizontal"} className='gap-1'>
+                    <EditorPanel code={code} setCode={setCode} />
 
-                <PanelResizeHandle className="w-1 rounded bg-cyan-900 hover:bg-cyan-400 transition-colors cursor-col-resize" />
+                    <PanelResizeHandle className="w-1 h-full flex-shrink-0 relative group">
+                        <div className="absolute inset-y-0 inset-x-1.5 md:inset-x-0 md:inset-y-1.5 bg-gray-800 rounded-full group-hover:bg-cyan-500/50 transition-colors" />
+                    </PanelResizeHandle>
 
-                <PreviewPanel compareSolution={compareSolution} html={html} iframeRef={iframeRef} output={output} />
-            </PanelGroup>
+                    <PreviewPanel compareSolution={compareSolution} html={html} iframeRef={iframeRef} output={output} />
+                </PanelGroup>
+            </div>
 
         </div>
     )

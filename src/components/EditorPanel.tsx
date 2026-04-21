@@ -10,9 +10,9 @@ export function EditorPanel({
 }: EditorPanelProps) {
 
   return (
-    <Panel defaultSize={52} minSize={25}>
-      <div className="h-full p-2 pr-1 bg-gray-900/50">
-        <div className="h-full border border-cyan-800 rounded-lg shadow-inner overflow-hidden">
+    <Panel defaultSize={48} minSize={25}>
+      <div className="h-full rounded-xl bg-gray-900/50 border border-gray-800 p-4 shadow-sm flex flex-col overflow-hidden text-gray-200">
+        <div className="flex-1 rounded-lg border border-gray-800/50 bg-[#111]/40 shadow-inner overflow-hidden relative">
           <Editor
             onChange={(v) => setCode(v || "")}
             defaultLanguage="javascript"
