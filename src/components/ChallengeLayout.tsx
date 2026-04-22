@@ -39,7 +39,7 @@ const ChallengeLayout = () => {
     const { ques } = state.state;
     const { challengeId } = useParams();
     const { userInfo } = useUser();
-    const { logout, token } = useContext(AuthContext) as AuthContextType;
+    const { logout } = useContext(AuthContext) as AuthContextType;
     const navigate = useNavigate();
     const [code, setCode] = useState(`// React is imported by default.\n// to use hooks, for eg. useState use it like React.useState()\nfunction App() {\n  return <h1>Hello</h1>;\n}`);
     const [output, setOutput] = useState('');
@@ -141,11 +141,13 @@ const ChallengeLayout = () => {
 
                 setOutput(data.result === "valid" ? "Correct Solution" : "Incorrect Solution");
 
-                // // add solution -> add the solution in the Solution's table
-                // await addSolution();
-
                 queryClient.invalidateQueries({
-                    queryKey: ['solution', token]
+                    queryKey: ['solution', challengeId]
+                });
+
+                // Also invalidate challenges so the Home page updates
+                queryClient.invalidateQueries({
+                    queryKey: ['challenges']
                 });
 
             });
@@ -180,6 +182,7 @@ const ChallengeLayout = () => {
         return () => window.removeEventListener('resize', handleResize);
     }, []);
 
+    // skeleton
     if (isChallengeLoading || isSolutionLoading) {
         return (
             <div className="h-screen flex flex-col bg-[#0a0a0a]">
