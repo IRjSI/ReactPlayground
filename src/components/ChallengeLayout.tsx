@@ -1,5 +1,5 @@
 import * as Babel from '@babel/standalone';
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import { useUser } from "../hooks/useUser";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getChallengeByIdAPI, getSolutionByChallengeIdAPI, submitCodeAPI } from "../services/API";
@@ -34,7 +34,9 @@ loader.init().then((monaco) => {
     });
 });
 
-const ChallengeLayout = ({ ques }: { ques: number }) => {
+const ChallengeLayout = () => {
+    const state = useLocation();
+    const { ques } = state.state;
     const { challengeId } = useParams();
     const { userInfo } = useUser();
     const { logout, token } = useContext(AuthContext) as AuthContextType;
@@ -123,7 +125,7 @@ const ChallengeLayout = ({ ques }: { ques: number }) => {
 
     async function submitSolution(iframeDoc: string) {
         setOutput("checking...");
-        const validatorKey = `challenge${ques + 1}Validator`;
+        const validatorKey = `challenge${ques}Validator`;
 
         try {
             const res = await submitCodeAPI(iframeDoc, validatorKey, challengeId!);
@@ -159,7 +161,6 @@ const ChallengeLayout = ({ ques }: { ques: number }) => {
 
     useEffect(() => {
         const existing = solution;
-        console.log(existing);
 
         if (existing && existing?.solution) {
             setCode(existing.solution);

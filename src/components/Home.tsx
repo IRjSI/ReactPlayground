@@ -128,6 +128,7 @@ const Home = () => {
                 <Link
                   key={q._id}
                   to={`/challenge/${q._id}`}
+                  state={{ ques: i + 1 }}
                   className={`group relative bg-[#111]/50 border border-gray-800 p-6 hover:bg-[#161616] transition-all duration-300 hover:border-cyan-500/40 hover:shadow-[0_10px_30px_-10px_rgba(6,182,212,0.2)] flex ${viewMode === 'grid'
                     ? "rounded-2xl hover:-translate-y-1 flex-col h-full"
                     : "rounded-xl hover:-translate-x-1 flex-col md:flex-row md:items-center gap-4 md:gap-6"

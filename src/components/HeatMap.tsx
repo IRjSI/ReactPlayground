@@ -13,9 +13,9 @@ const StreakHeatmap = () => {
     }))
     : [];
 
-  const today = new Date();
-  const oneYearAgo = new Date();
-  oneYearAgo.setFullYear(today.getFullYear() - 1);
+  const currentYear = new Date().getFullYear();
+  const startOfYear = new Date(currentYear, 0, 1);
+  const endOfYear = new Date(currentYear, 11, 31);
 
   return (
     <div className="w-full">
@@ -26,8 +26,8 @@ const StreakHeatmap = () => {
       <div className="flex justify-start overflow-x-auto pb-4">
         <HeatMap
           value={value}
-          startDate={oneYearAgo}
-          endDate={today}
+          startDate={startOfYear}
+          endDate={endOfYear}
           width={850}
           rectRender={(props, data) => {
             const dateStr = data?.date ? `${data.date}` : "Date not found";
