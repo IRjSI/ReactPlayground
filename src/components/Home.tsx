@@ -41,10 +41,10 @@ const Home = () => {
       <main className="max-w-6xl mx-auto px-6 py-12">
         {/* User Stats / Hero Section */}
         <div className="mb-12 relative animate-in fade-in slide-in-from-bottom-4 duration-700">
-          <div className="absolute inset-0 bg-gradient-to-r from-cyan-900/30 via-[#0a0a0a] to-[#0a0a0a] rounded-3xl blur-3xl -z-10" />
+          <div className="absolute inset-0 bg-linear-to-r from-cyan-900/30 via-[#0a0a0a] to-[#0a0a0a] rounded-3xl blur-3xl -z-10" />
           <div className="bg-[#111]/80 backdrop-blur-xl border border-gray-800 rounded-3xl p-8 shadow-2xl flex flex-col md:flex-row items-center gap-8 justify-between relative overflow-hidden">
             {/* Glossy highlight line */}
-            <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-cyan-500/50 to-transparent"></div>
+            <div className="absolute top-0 left-0 w-full h-px bg-linear-to-r from-transparent via-cyan-500/50 to-transparent"></div>
 
             <div className="flex items-center gap-6">
               <div className="relative group">
@@ -65,13 +65,13 @@ const Home = () => {
             </div>
 
             <div className="flex gap-4">
-              <div className="flex flex-col items-center justify-center p-4 bg-[#0a0a0a]/80 rounded-2xl border border-orange-500/20 backdrop-blur-md min-w-[110px] shadow-[inset_0_1px_1px_rgba(255,255,255,0.05)]">
+              <div className="flex flex-col items-center justify-center p-4 bg-[#0a0a0a]/80 rounded-2xl border border-orange-500/20 backdrop-blur-md min-w-27.5 shadow-[inset_0_1px_1px_rgba(255,255,255,0.05)]">
                 <Flame size={26} className="text-orange-500 mb-1 drop-shadow-[0_0_8px_rgba(249,115,22,0.6)]" />
                 <span className="text-2xl font-bold text-gray-100">{userInfo?.user?.streak?.current || 0}</span>
                 <span className="text-[10px] text-gray-400 uppercase tracking-widest mt-1 font-semibold">Day Streak</span>
               </div>
 
-              <div className="flex flex-col items-center justify-center p-4 bg-[#0a0a0a]/80 rounded-2xl border border-cyan-500/20 backdrop-blur-md min-w-[110px] shadow-[inset_0_1px_1px_rgba(255,255,255,0.05)]">
+              <div className="flex flex-col items-center justify-center p-4 bg-[#0a0a0a]/80 rounded-2xl border border-cyan-500/20 backdrop-blur-md min-w-27.5 shadow-[inset_0_1px_1px_rgba(255,255,255,0.05)]">
                 <Code2 size={26} className="text-cyan-400 mb-1 drop-shadow-[0_0_8px_rgba(6,182,212,0.6)]" />
                 <span className="text-2xl font-bold text-gray-100">{progress}%</span>
                 <span className="text-[10px] text-gray-400 uppercase tracking-widest mt-1 font-semibold">Completed</span>
@@ -128,13 +128,12 @@ const Home = () => {
                 <Link
                   key={q._id}
                   to={`/challenge/${q._id}`}
-                  state={{ ques: i + 1 }}
                   className={`group relative bg-[#111]/50 border border-gray-800 p-6 hover:bg-[#161616] transition-all duration-300 hover:border-cyan-500/40 hover:shadow-[0_10px_30px_-10px_rgba(6,182,212,0.2)] flex ${viewMode === 'grid'
                     ? "rounded-2xl hover:-translate-y-1 flex-col h-full"
                     : "rounded-xl hover:-translate-x-1 flex-col md:flex-row md:items-center gap-4 md:gap-6"
                     }`}
                 >
-                  <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-[inherit]" />
+                  <div className="absolute inset-0 bg-linear-to-br from-cyan-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-[inherit]" />
 
                   {q.solved && viewMode === 'grid' && (
                     <div className="absolute top-5 right-5 scale-100 transition-transform duration-300 group-hover:scale-110">
@@ -150,7 +149,7 @@ const Home = () => {
                     {q.statement}
                   </h3>
 
-                  <div className={`flex items-center ${viewMode === 'grid' ? "justify-between mt-auto pt-5 border-t border-gray-800/50" : "justify-between md:justify-end gap-6 shrink-0 md:min-w-[200px]"}`}>
+                  <div className={`flex items-center ${viewMode === 'grid' ? "justify-between mt-auto pt-5 border-t border-gray-800/50" : "justify-between md:justify-end gap-6 shrink-0 md:min-w-50"}`}>
                     <div className="flex items-center gap-2">
                       {q.solved && viewMode === 'list' && (
                         <CheckCircle className="text-green-500 drop-shadow-[0_0_8px_rgba(34,197,94,0.4)]" size={18} />

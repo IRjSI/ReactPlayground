@@ -1,5 +1,5 @@
 import * as Babel from '@babel/standalone';
-import { useLocation, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useUser } from "../hooks/useUser";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getChallengeByIdAPI, getSolutionByChallengeIdAPI, submitCodeAPI } from "../services/API";
@@ -35,8 +35,6 @@ loader.init().then((monaco) => {
 });
 
 const ChallengeLayout = () => {
-    const state = useLocation();
-    const { ques } = state.state;
     const { challengeId } = useParams();
     const { userInfo } = useUser();
     const { logout } = useContext(AuthContext) as AuthContextType;
@@ -125,10 +123,9 @@ const ChallengeLayout = () => {
 
     async function submitSolution(iframeDoc: string) {
         setOutput("checking...");
-        const validatorKey = `challenge${ques}Validator`;
 
         try {
-            const res = await submitCodeAPI(iframeDoc, validatorKey, challengeId!);
+            const res = await submitCodeAPI(iframeDoc, challengeId!);
             const { solutionId } = res;
 
             // Register for result
@@ -186,7 +183,7 @@ const ChallengeLayout = () => {
     if (isChallengeLoading || isSolutionLoading) {
         return (
             <div className="h-screen flex flex-col bg-[#0a0a0a]">
-                <div className="h-[90px] border-b border-cyan-700/40 bg-gray-900 px-4 flex items-center justify-between shadow-lg">
+                <div className="h-22.5 border-b border-cyan-700/40 bg-gray-900 px-4 flex items-center justify-between shadow-lg">
                     <div className="w-9 h-9 rounded-lg bg-gray-800 animate-pulse" />
                     <div className="w-1/3 h-6 rounded-md bg-gray-800 animate-pulse" />
                     <div className="flex items-center gap-3">
@@ -226,7 +223,7 @@ const ChallengeLayout = () => {
                 <PanelGroup direction={isMobile ? "vertical" : "horizontal"} className='gap-1'>
                     <EditorPanel code={code} setCode={setCode} />
 
-                    <PanelResizeHandle className="w-1 h-full flex-shrink-0 relative group">
+                    <PanelResizeHandle className="w-1 h-full shrink-0 relative group">
                         <div className="absolute inset-y-0 inset-x-1.5 md:inset-x-0 md:inset-y-1.5 bg-gray-800 rounded-full group-hover:bg-cyan-500/50 transition-colors" />
                     </PanelResizeHandle>
 

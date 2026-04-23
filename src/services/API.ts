@@ -53,10 +53,9 @@ async function getChallengeByIdAPI(challengeId: string) {
   return res.data.data;
 }
 
-async function submitCodeAPI(iframeDoc: string, validatorKey: string, challengeId: string) {
+async function submitCodeAPI(iframeDoc: string, challengeId: string) {
   const res = await apiClient.post("/submission/submit", {
     iframeDoc,
-    validatorKey,
     challengeId,
   });
   return res.data;

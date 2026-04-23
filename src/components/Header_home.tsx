@@ -39,7 +39,7 @@ export function Header({
 
       {/* CENTER QUESTION */}
       <div className="flex-1 min-w-50 text-center order-last md:order-0">
-        <div className="text-sm md:text-lg font-semibold truncate px-2">
+        <div className="text-sm md:text-lg font-semibold px-2">
           {challenge?.challenge.statement}
         </div>
 
