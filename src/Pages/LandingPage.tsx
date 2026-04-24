@@ -168,7 +168,7 @@ const LandingPage = () => {
           <div>© React Playground 2026</div>
 
           <div className="mt-2">
-            <Link to="/privacy" className="hover:text-white underline">
+            <Link to="/privacy-policy" className="hover:text-white underline">
               Privacy Policy
             </Link>
           </div>
