@@ -33,11 +33,6 @@ const Privacy = () => {
         We may use cookies or similar technologies to improve user experience.
       </p>
 
-      <h2 className="text-xl mt-8 mb-2">Contact</h2>
-      <p className="text-gray-400">
-        For any questions, contact: hello@reactpg.xyz
-      </p>
-
       <p className="text-gray-500 text-sm mt-10">
         Last updated: 2026
       </p>
