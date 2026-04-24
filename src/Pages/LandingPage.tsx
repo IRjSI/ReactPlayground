@@ -165,7 +165,13 @@ const LandingPage = () => {
         </section>
 
         <footer className="px-6 py-10 text-center text-gray-500 text-sm border-t border-gray-800">
-          © React Playground 2026
+          <div>© React Playground 2026</div>
+
+          <div className="mt-2">
+            <Link to="/privacy" className="hover:text-white underline">
+              Privacy Policy
+            </Link>
+          </div>
         </footer>
       </div>
     </div>

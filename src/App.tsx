@@ -10,9 +10,9 @@ import Signup from './Pages/Signup'
 import AddChallenge from './components/AddChallenge'
 import AuthSuccess from './components/AuthSuccess'
 import About from './Pages/About'
-import { PrivacyPolicy } from './components/PrivacyPolicy'
 import { TermService } from './components/TermService'
 import ChallengeLayout from './components/ChallengeLayout'
+import Privacy from './Pages/Privacy'
 
 function App() {
   const { isLoggedIn } = useContext(AuthContext) as AuthContextType;
@@ -22,7 +22,7 @@ function App() {
       <Routes>
         <Route path='/' element={<LandingPage />} />
         <Route path='/About' element={<About />} />
-        <Route path='/privacy-policy' element={<PrivacyPolicy />} />
+        <Route path='/privacy-policy' element={<Privacy />} />
         <Route path='/terms-of-service' element={<TermService />} />
         {isLoggedIn ? (
           <>
