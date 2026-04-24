@@ -4,7 +4,6 @@ export default function About() {
   return (
     <div className="min-h-screen relative overflow-hidden bg-linear-to-br from-gray-900 via-gray-800 to-gray-900 text-white">
 
-      {/* Background */}
       <div className="absolute inset-0 bg-[radial-gradient(circle,#0ff_1px,transparent_1px)] [bg-size:40px_40px] opacity-20 animate-moveDots" />
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.08)_0%,transparent_60%)]" />
 
