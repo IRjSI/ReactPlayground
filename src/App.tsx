@@ -11,6 +11,7 @@ import AddChallenge from './components/AddChallenge'
 import AuthSuccess from './components/AuthSuccess'
 import About from './Pages/About'
 import { TermService } from './components/TermService'
+import ChallengeLayout from './components/ChallengeLayout'
 import Privacy from './Pages/Privacy'
 
 function App() {
@@ -26,8 +27,9 @@ function App() {
         {isLoggedIn ? (
           <>
             <Route path='/home' element={<Home />} />
+            <Route path='/challenge/:challengeId' element={<ChallengeLayout />} />
             <Route path='/profile' element={<Profile />} />
-            <Route path='/challenge' element={<AddChallenge />} />
+            <Route path='/add-challenge' element={<AddChallenge />} />
           </>
         ) : null}
 

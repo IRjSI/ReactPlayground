@@ -1,7 +1,7 @@
 import { useContext, useState } from "react";
 import { Link } from "react-router-dom";
 import { AuthContext, AuthContextType } from "../context/authContext";
-import { Code2, Menu, X } from "lucide-react";
+import { Code2, Menu, User, X } from "lucide-react";
 
 function Header() {
   const { isLoggedIn } = useContext(AuthContext) as AuthContextType;
@@ -48,7 +48,7 @@ function Header() {
                 className="flex items-center gap-2 px-3 py-1.5 bg-[#111] border border-gray-800 rounded-md hover:border-cyan-500/50 transition"
               >
                 <div className="w-6 h-6 rounded-full bg-cyan-500/20 flex items-center justify-center text-xs text-cyan-400">
-                  U
+                  <User size={16} />
                 </div>
                 <span className="text-sm text-gray-300">Profile</span>
               </Link>

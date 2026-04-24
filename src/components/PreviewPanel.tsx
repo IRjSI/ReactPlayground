@@ -7,24 +7,15 @@ import { PreviewPanelProps } from '../types/types';
 export function PreviewPanel({ html, output, compareSolution, iframeRef }: PreviewPanelProps) {
   return (
     <Panel defaultSize={48} minSize={25}>
-      <div className="h-full p-2 pl-1 bg-gray-900/50">
-        <div className="relative h-full border border-cyan-800 rounded-lg shadow-inner overflow-hidden flex flex-col">
-          <iframe
-            ref={iframeRef}
-            sandbox="allow-scripts allow-same-origin"
-            srcDoc={html}
-            title="preview"
-            className="flex-1 w-full border-b bg-gray-100"
-          />
-
-          <div className="p-4 flex justify-between items-center border-t border-gray-700">
+      <div className="h-full rounded-xl bg-gray-900/50 border border-gray-800 p-4 shadow-sm flex flex-col overflow-hidden">
+        <div className="w-full flex justify-end items-center mb-4 border-b border-gray-800 pb-2">
             <span className={`${
               output === "Correct Solution"
                 ? "text-green-500"
                 : output === "Incorrect Solution"
                 ? "text-red-500"
                 : "text-cyan-400"
-            } text-sm font-medium`}>
+            } text-sm font-medium tracking-wide mr-4`}>
               {output}
             </span>
             
@@ -35,11 +26,20 @@ export function PreviewPanel({ html, output, compareSolution, iframeRef }: Previ
               id="submit-btn"
               onClick={compareSolution}
               disabled={output === "checking..."}
-              className="px-4 py-2 bg-green-600 hover:bg-green-700 rounded-lg transition text-white text-sm"
+              className="px-5 py-1.5 bg-green-500/10 border border-green-500/20 text-green-400 font-bold hover:bg-green-500/20 rounded-lg transition text-sm shadow-[0_0_10px_rgba(34,197,94,0.1)] disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Submit
             </button>
-          </div>
+        </div>
+
+        <div className="flex-1 rounded-lg border border-gray-800/50 bg-[#111]/40 overflow-hidden relative">
+          <iframe
+            ref={iframeRef}
+            sandbox="allow-scripts allow-same-origin"
+            srcDoc={html}
+            title="preview"
+            className="absolute inset-0 w-full h-full bg-white"
+          />
         </div>
       </div>
     </Panel>

@@ -2,6 +2,7 @@ import { CheckCircle, X } from "lucide-react";
 
 /* Type */
 import { SidebarProps } from '../types/types';
+import { Link } from "react-router-dom";
 
 export function QuestionSidebar({
   questionMap,
@@ -57,9 +58,11 @@ export function QuestionSidebar({
                   transition
                 "
               >
-                <span className="text-white font-medium text-sm leading-snug flex-1">
-                  {i + 1}. {q.statement}
-                </span>
+                <Link to={`/challenge/${q._id}`}>
+                  <span className="text-white font-medium text-sm leading-snug flex-1">
+                    {i + 1}. {q.statement}
+                  </span>
+                </Link>
 
                 {solved && (
                   <CheckCircle

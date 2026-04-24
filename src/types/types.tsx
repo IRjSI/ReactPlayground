@@ -25,6 +25,7 @@ export type QuestionType = {
   _id: string;
   statement: string;
   solved: boolean;
+  result: string;
 };
 
 export type SolutionType = {
@@ -35,15 +36,8 @@ export type SolutionType = {
 
 export type HeaderProps = {
   userInfo: any;
-  questions: QuestionType[];
-  ques: number;
-  setQues: React.Dispatch<React.SetStateAction<number>>;
-  completedQues?: QuestionType[];
-  questionMap: boolean;
-  setQuestionMap: React.Dispatch<React.SetStateAction<boolean>>;
+  challenge: any;
   logoutClick: () => void;
-  nextClick: () => void;
-  prevClick: () => void;
 };
 
 export type SidebarProps = {
@@ -63,10 +57,6 @@ export type QuestionSidebarProps = {
 export type EditorPanelProps = {
   code: string;
   setCode: React.Dispatch<React.SetStateAction<string>>;
-  questions: QuestionType[];
-  ques: number;
-  completedQues?: QuestionType[];
-  solutions: SolutionType[];
 };
 
 export type PreviewPanelProps = {
