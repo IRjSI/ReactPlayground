@@ -50,6 +50,7 @@ const ChallengeLayout = () => {
         enabled: !!challengeId,
         staleTime: 1000 * 60 * 10,
         retry: 1,
+        refetchOnWindowFocus: false,
     });
 
     const { data: solution, isLoading: isSolutionLoading } = useQuery({
@@ -58,6 +59,7 @@ const ChallengeLayout = () => {
         enabled: !!challengeId,
         staleTime: 1000 * 60 * 10,
         retry: 1,
+        refetchOnWindowFocus: false,
     });
 
     // for showing the preview
