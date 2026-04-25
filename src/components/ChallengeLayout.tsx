@@ -135,7 +135,7 @@ const ChallengeLayout = () => {
 
             socket.off("solutionResult");
 
-            socket.once("solutionResult", async (data: any) => {
+            const resultHandler = async (data: any) => {
                 if (data.solutionId !== solutionId) return;
 
                 setOutput(data.result === "valid" ? "Correct Solution" : "Incorrect Solution");
@@ -149,7 +149,10 @@ const ChallengeLayout = () => {
                     queryKey: ['challenges']
                 });
 
-            });
+                socket.off("solutionResult", resultHandler);
+            };
+
+            socket.on("solutionResult", resultHandler);
         } catch {
             setOutput("error...");
         }

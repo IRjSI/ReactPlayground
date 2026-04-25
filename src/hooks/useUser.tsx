@@ -1,26 +1,19 @@
-import axios from "axios";
-import { useContext, useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { useContext } from "react";
 import { AuthContext, AuthContextType } from "../context/authContext";
+import { getUserAPI } from "../services/API";
 import { UserProps } from "../types/types";
 
 export function useUser() {
-  const [userInfo, setUser] = useState<UserProps>();
-  const [loadingUser, setLoadingUser] = useState(true);
   const { token } = useContext(AuthContext) as AuthContextType;
 
-  useEffect(() => {
-    if (!token) {
-      setLoadingUser(false);
-      return;
-    }
-
-    axios
-      .get(`${import.meta.env.VITE_BACKEND_URL}/user/get-user`, {
-        headers: { Authorization: `Bearer ${token}` },
-      })
-      .then(res => setUser(res.data.data))
-      .finally(() => setLoadingUser(false));
-  }, [token]);
+  const { data: userInfo, isLoading: loadingUser } = useQuery<UserProps>({
+    queryKey: ["user"],
+    queryFn: getUserAPI,
+    enabled: !!token,
+    staleTime: 1000 * 60 * 30, // 30 minutes
+    refetchOnWindowFocus: false,
+  });
 
   return { userInfo, loadingUser };
 }

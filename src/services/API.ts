@@ -69,11 +69,17 @@ async function addSolutionAPI(challengeId: string, code: string) {
   return res.data;
 }
 
+async function getUserAPI() {
+  const res = await apiClient.get("/user/get-user");
+  return res.data.data;
+}
+
 export {
   getSolutionsAPI,
   getSolutionByChallengeIdAPI,
   getChallengesAPI,
   getChallengeByIdAPI,
   submitCodeAPI,
-  addSolutionAPI
+  addSolutionAPI,
+  getUserAPI
 }
