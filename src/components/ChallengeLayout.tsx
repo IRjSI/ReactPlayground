@@ -13,7 +13,7 @@ import { EditorPanel } from './EditorPanel';
 import { PreviewPanel } from './PreviewPanel';
 import { Header } from './Header_home';
 
-const socket = import.meta.env.VITE_ENV === "dev" ? io("http://localhost:4000") : io("https://rpg-proxy.onrender.com");
+const socket = import.meta.env.VITE_ENV === "dev" ? io("http://localhost:4000") : io("https://api.reactpg.xyz");
 
 loader.init().then((monaco) => {
     monaco.editor.defineTheme("custom-dark", {
