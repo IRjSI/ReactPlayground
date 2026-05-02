@@ -6,6 +6,7 @@ export type UserProps = {
     email: string;
     avatar: string;
     provider: string;
+    badges: string[];
     streak: {
       current: number;
       longest: number;

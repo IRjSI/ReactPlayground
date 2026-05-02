@@ -11,8 +11,8 @@
 ### What does the following code mean?
 
 ```html
-<script crossorigin src="https://unpkg.com/react@17/umd/react.development.js"></script>
-<script crossorigin src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+<script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
 ```
 
 #### React and ReactDOM
@@ -41,10 +41,11 @@ Thus, the above code loads React directly into the browser.
 
 #### Rendering the App
 ```ts
-ReactDOM.render(React.createElement(App), document.getElementById('root'));
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(React.createElement(App));
 ```
-- **Step 1**: Creates an element using the compiled `App` component.
-- **Step 2**: Renders it into the `<div>` with the `id="root"`.
+- **Step 1**: Creates a root using the `<div>` with the `id="root"`.
+- **Step 2**: Renders an element using the compiled `App` component into the root.
 
 #### Handling Runtime Errors
 ```jsx
@@ -83,30 +84,54 @@ An **iframe** is a small browser window embedded within your current webpage. It
 
 **After user submits the solution, how do we validate it?**
 
-We get the document from iframe as:
+We get the document from the iframe safely after it loads:
 ``` jsx
-const iframe = document.querySelector("iframe") as HTMLIFrameElement;
-const iframeDoc = iframe?.contentDocument;
+const iframe = iframeRef.current;
+iframe.srcdoc = html;
+
+// wait for load safely
+await new Promise<void>((resolve) => {
+    const handler = () => {
+        iframe.onload = null; // cleanup
+        resolve();
+    };
+    iframe.onload = handler;
+});
+
+const iframeDoc = iframe.contentDocument?.documentElement.outerHTML;
 ```
 
-Then we perform the logic
+**Then we perform the logic:**
 
-But we have to make some changes:
+Previously, we validated the document logic directly on the client. Now, we send `iframeDoc` to an actual backend service for secure and reliable evaluation.
+
+``` jsx
+const res = await submitCodeAPI(iframeDoc, challengeId!);
+const { solutionId } = res;
+```
+
+**Real-time Results via WebSockets**
+Since validation is handled by a backend service, we use **Socket.io** to register for the result and listen for our specific `solutionId`:
+``` jsx
+// Register for result
+socket.emit("register", solutionId);
+
+socket.on("solutionResult", async (data) => {
+    if (data.solutionId !== solutionId) return;
+    
+    setOutput(data.result === "valid" ? "Correct Solution" : "Incorrect Solution");
+});
+```
+
+**Important considerations:**
+We have to make some changes to the iframe to read its content without issues:
 ``` jsx
 <iframe
     sandbox="allow-scripts allow-same-origin"
 ```
+add `allow-same-origin`.
 
-add allow-same-origin
-
-Also if we try to access iframe.contentDocument before it's ready, we might get *null*
-so to avoid this:
-``` jsx
-const iframeDoc = iframe?.contentDocument;
-
-if (!doc) return console.log("Iframe not ready");
-...
-```
+Also if we try to access `iframe.contentDocument` before it's ready, we might get *null*. That is why we now use the `onload` handler shown above instead of accessing it immediately.
 
 # Adding Challenges and their solutions
 
