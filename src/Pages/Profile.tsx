@@ -108,7 +108,7 @@ export default function Profile() {
                 </div>
 
                 {/* User Info */}
-                <div className="space-y-6">
+                <div className="space-y-6 mb-8">
                   <div>
                     <p className="text-xs text-gray-500 uppercase tracking-wider mb-1">Email</p>
                     <p className="text-base text-cyan-400 font-medium truncate">
@@ -126,6 +126,24 @@ export default function Profile() {
                     >
                       {userInfo?.user.provider === "google" ? "Connected" : "Not linked"}
                     </p>
+                  </div>
+                </div>
+
+                <div className="space-y-6">
+                  {/* badges */}
+                  <p className="text-xs text-gray-500 uppercase tracking-wider mb-1">Badges</p>
+                  <div className="flex gap-2">
+                    {userInfo?.user.badges.length ? (
+                      userInfo.user.badges.map((badge, index) => (
+                        <div key={index} className="flex items-center gap-2">
+                          <span className="px-2 py-1 bg-cyan-500/20 text-cyan-400 text-xs font-medium rounded-full">
+                            {badge}
+                          </span>
+                        </div>
+                      ))
+                    ) : (
+                      <p className="text-sm text-white">No badges</p>
+                    )}
                   </div>
                 </div>
               </div>
