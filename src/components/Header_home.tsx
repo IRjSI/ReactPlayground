@@ -72,7 +72,7 @@ export function Header({
           className="rounded-lg hover:scale-105 transition"
         >
           <img
-            src={userInfo?.user.avatar}
+            src={userInfo?.user?.avatar || "/undraw_avatar.png"}
             alt="avatar"
             className="rounded-lg w-9 h-9 md:w-10 md:h-10 object-cover"
           />
